@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include("../includes/head") %>
+  <title>Error 400 &mdash; SSL Manager</title>
+  <link rel="stylesheet" href="/assets/css/global/errors.css">
+  <link rel="stylesheet" href="/assets/css/global/footer.css">
+</head>
+
+<% if (locals.options && options.theme) { %> 
+  <body data-theme="<%= options.theme %>">
+<% } else { %> 
+  <body data-theme="system">
+<% } %> 
+  <%- include("../includes/body") %>
+  
+  <div class="container">
+    <div class="wrapper text-center bg-transparent">
+      <h1 class="display-3">400</h1>
+      <p class="lead">The server declined your request</p>
+      <a class="btn btn-responsive" onclick="window.location.reload()">Try Again</a>
+      <a class="btn btn-responsive" href="/">Return Home</a>
+    </div>
+  </div>
+
+  <%- include("../includes/footer.ejs", { static: true }) %>
+</body>
+
+</html>

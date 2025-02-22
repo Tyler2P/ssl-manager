@@ -1,0 +1,48 @@
+body > header {
+  border-bottom: 1px solid rgb(55, 55, 55);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 3.7rem;
+  padding: .5rem;
+  padding-bottom: 0;
+}
+body > header > .left-wrapper {
+  display: flex;
+  align-items: center;
+  padding-bottom: .5rem;
+  gap: .5rem;
+  height: 100%;
+}
+body > header > .left-wrapper > svg {
+  width: 4rem;
+  height: 100%;
+}
+body > header > .left-wrapper > h1 {
+  height: min-content;
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+body > header > .nav-bar {
+  transition: transform 0.3s ease;
+  z-index: 103;
+}
+body > header > .nav-bar > ul {
+  border-bottom: none;
+  height: 100%;
+}
+body > header > .nav-bar > ul > li.nav-item {
+  cursor: pointer;
+  border-bottom: none;
+  min-width: 2rem;
+}
+body > header > .nav-bar > ul > li.nav-item:hover {
+
+}
+body > header > .nav-bar > ul > li.nav-item.selected {
+
+}
+body > header > .nav-bar > ul > li.nav-item.selected:hover {
+
+}

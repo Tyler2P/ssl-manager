@@ -1,0 +1,79 @@
+form.global-settings .wrapper {
+  --input-border-color: rgb(209, 209, 209);
+  --input-bg-color: transparent;
+  --form-bg-color: rgb(56, 53, 53);
+  position: relative;
+  width: 100%;
+  height: 3rem;
+}
+body[data-theme="light"] form.global-settings .wrapper {
+  --input-border-color: rgb(230, 230, 230);
+  --form-bg-color: rgb(105, 105, 105);
+}
+form.global-settings .wrapper > label {
+  transition: transform 120ms ease-in, color 120ms ease-in, background 300ms ease;
+  position: absolute;
+  font-weight: bold;
+  white-space: nowrap;
+  cursor: text;
+  padding: calc(.5rem * 0.75) calc(.5rem * .5);
+  margin: calc(.5rem * 0.75 + 3px) calc(.5rem * .5);
+  color: rgb(250, 252, 253);
+  transform: translate(0, 0);
+  background-color: var(--form-bg-color);
+  transform-origin: 0 0;
+  opacity: 1;
+  line-height: 1.2;
+  left: 0;
+  top: 0;
+}
+form.global-settings .wrapper > label > span.required {
+  color: rgb(255, 0, 0);
+}
+form.global-settings .wrapper input,
+form.global-settings .wrapper textarea {
+  border: 3px solid var(--input-border-color);
+  box-sizing: border-box;
+  display: block;
+  resize: none;
+  background-color: var(--input-bg-color);
+  color: rgb(255, 255, 255);
+  padding: calc(.5rem * 1.5) .5rem;
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+}
+form.global-settings .wrapper > .input-wrapper {
+  border: 3px solid var(--input-border-color);
+  display: flex;
+  border-radius: .4rem;
+}
+form.global-settings .wrapper > .input-wrapper > input,
+form.global-settings .wrapper > .input-wrapper > textarea {
+  border: none;
+}
+form.global-settings .wrapper > .input-wrapper > button.show-password-btn {
+  --bs-btn-color: rgb(250, 252, 253);
+  --bs-btn-hover-color: rgb(185, 185, 185);
+  --bs-btn-active-color: rgb(185, 185, 185);
+  --bs-btn-disabled-color: rgb(185, 185, 185);
+}
+
+form.global-settings .wrapper > input:focus + label,
+form.global-settings .wrapper > input:active + label,
+form.global-settings .wrapper > input:not(:placeholder-shown) + label,
+form.global-settings .wrapper > .input-wrapper:has(input:focus) + label,
+form.global-settings .wrapper > .input-wrapper:has(input:active) + label,
+form.global-settings .wrapper > .input-wrapper:has(input:not(:placeholder-shown)) + label {
+  transform: translate(.25rem, -70%) scale(.95);
+  color: var(--themed-text-color-dark);
+}
+form.global-settings .wrapper > textarea:focus + label,
+form.global-settings .wrapper > textarea:active + label,
+form.global-settings .wrapper > textarea:not(:placeholder-shown) + label,
+form.global-settings .wrapper > .input-wrapper:has(textarea:focus) + label,
+form.global-settings .wrapper > .input-wrapper:has(textarea:active) + label,
+form.global-settings .wrapper > .input-wrapper:has(textarea:not(:placeholder-shown)) + label {
+  transform: translate(.25rem, -70%) scale(.95);
+  color: var(--themed-text-color-dark);
+}

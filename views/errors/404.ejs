@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include("../includes/head") %>
+  <title>Error 404 &mdash; SSL Manager</title>
+  <link rel="stylesheet" href="/assets/css/global/errors.css">
+  <link rel="stylesheet" href="/assets/css/global/footer.css">
+</head>
+
+<% if (locals.options && options.theme) { %> 
+  <body data-theme="<%= options.theme %>">
+<% } else { %> 
+  <body data-theme="system">
+<% } %> 
+  <%- include("../includes/body") %>
+  
+  <div class="container">
+    <div class="wrapper text-center bg-transparent">
+      <h1 class="display-3">404</h1>
+      <p class="lead">The page you're looking for doesn't exist</p>
+      <a class="btn btn-responsive" href="/">Return Home</a>
+    </div>
+  </div>
+
+  <%- include("../includes/footer.ejs", { static: true }) %>
+</body>
+
+</html>

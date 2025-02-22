@@ -1,0 +1,16 @@
+body > .wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+body > .wrapper > p {
+  max-width: 37.5rem;
+  margin-top: .8rem;
+  margin-bottom: 2.5rem;
+}
+body > .wrapper > .btn-container > .btn {
+  min-width: 30rem;
+}

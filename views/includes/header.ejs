@@ -1,0 +1,42 @@
+<header>
+  <div class="left-wrapper">
+    <%- include("./logo.ejs") %>
+    <h1>SSL Manager</h1>
+  </div>
+  <div class="nav-bar">
+    <ul class="nav nav-tabs">
+      <% if (locals.page === "dashboard") { %>
+        <li class="nav-item selected">
+          <a href="#" class="btn btn-transparent">
+            Dashboard
+          </a>
+        </li>
+      <% } else { %>
+        <li class="nav-item">
+          <a href="/dashboard" class="btn btn-transparent">
+            Dashboard
+          </a>
+        </li>
+      <% } %>
+
+      <% if (locals.page === "manage") { %>
+        <li class="nav-item selected">
+          <a href="#" class="btn btn-transparent">
+            Manage
+          </a>
+        </li>
+      <% } else { %>
+        <li class="nav-item">
+          <a href="/dashboard/admin" class="btn btn-transparent">
+            Manage
+          </a>
+        </li>
+      <% } %>
+    </ul>
+  </div>
+  <div class="right-wrapper">
+    <a href="/auth/logout" class="btn btn-transparent btn-border btn-dimmed">
+      Sign out
+    </a>
+  </div>
+</header>

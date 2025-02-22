@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("../includes/head.ejs") %>
+  <title>SSL Manager</title>
+  <link rel="stylesheet" href="/assets/css/global/utils.css">
+  <link rel="stylesheet" href="/assets/css/first-setup/welcome.css">
+</head>
+
+<% if (locals.options && options.theme) { %> 
+  <body data-theme="<%= options.theme %>">
+<% } else { %> 
+  <body data-theme="system">
+<% } %> 
+  <%- include("../includes/body.ejs") %>
+
+  <div class="wrapper">
+    <h1 class="text-center">Welcome to SSL Manager</h1>
+    <p class="text-center">Thank you for installing SSL Manager. You are just a few steps away from setting up your administrator account and managing SSL certificates with ease</p>
+    <div class="btn-container">
+      <a href="/first-setup/create-account" class="btn btn-primary">Get Started</a>
+    </div>
+  </div>
+</body>
+</html>

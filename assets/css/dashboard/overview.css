@@ -1,0 +1,98 @@
+/* Stats Row */
+.stats-row {
+  display: flex;
+  gap: 2rem;
+  padding: 1.5rem;
+}
+.stats-row > .widget {
+  border: 1px solid rgb(61, 61, 61);
+  background-color: rgb(40, 40, 40);
+  padding: 1rem;
+  border-radius: 3px;
+  min-width: 15rem;
+  min-height: 8rem;
+}
+.stats-row > .widget > p.widget-title {
+  font-size: 1rem;
+  margin: 0;
+}
+.stats-row > .widget > p.dynamic-data {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+  white-space: nowrap;
+  font-size: 2.7rem;
+  line-height: 3rem;
+  margin-bottom: 1rem;
+}
+
+/* Error Page */
+
+.certs > .no-certs-error {
+  text-align: center;
+  margin-top: 5rem;
+  width: 100%;
+}
+.certs > .no-certs-error > h3 {
+  margin-bottom: 1rem;
+}
+.certs > .no-certs-error > p {
+  margin-bottom: 2rem;
+}
+
+/* Certs Header */
+
+.cert-header {
+  display: flex;
+  justify-content: right;
+  gap: 1rem;
+}
+
+/* Certificates */
+
+.certs {
+  padding: 1rem;
+}
+.certs > .list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+@media (max-width: 840px) {
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .cert-header {
+    justify-content: center;
+    margin-top: 1rem;
+  }
+}
+
+/* Create Cert Modal */
+#new-certificate-modal form > .title-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0;
+  margin-bottom: .5rem;
+}
+#new-certificate-modal form > .title-wrapper > p {
+  font-weight: bold;
+  margin: 0 .5rem;
+}
+#new-certificate-modal form > .title-wrapper > .left-border,
+#new-certificate-modal form > .title-wrapper > .right-border {
+  background-color: rgb(255, 255, 255);
+  border-radius: .3rem;
+  height: 3px;
+}
+#new-certificate-modal form > .title-wrapper > .left-border {
+  width: 15px;
+}
+#new-certificate-modal form > .title-wrapper > .right-border {
+  width: 55px;
+}

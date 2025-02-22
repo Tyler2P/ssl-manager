@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("../includes/head.ejs") %>
+  <title>Login &mdash; SSL Manager</title>
+
+  <link rel="stylesheet" href="/assets/css/global/utils.css">
+  <link rel="stylesheet" href="/assets/css/login/template.css">
+
+	<script src="/assets/js/global/utils.js"></script>
+	<% if (locals.page === "mfa") { %>
+	<script src="/assets/js/login/mfa.js"></script>
+	<% } else if (locals.page === "register") { %>
+	<script src="/assets/js/login/register.js"></script>
+	<% } else if (locals.page === "reset-password") { %>
+	<script src="/assets/js/login/reset-password.js"></script>
+	<% } else { %>
+	<script src="/assets/js/login/login.js"></script>
+	<% } %>
+</head>
+
+<% if (locals.options && options.theme) { %> 
+  <body data-theme="<%= options.theme %>">
+<% } else { %> 
+  <body data-theme="system">
+<% } %> 
+	<%- include("../includes/body") %>
+
+  <header>
+    <div class="image-wrapper">
+      <%- include("../includes/logo.ejs") %>
+    </div>
+    <h2>SSL Manager</h2>
+  </header>
+		
+	<section>
+		<div class="wrapper">
+			<% if (locals.page === "mfa") { %>
+				<div class="card fat" data-page="mfa">
+					<div class="card-body">
+						<h4 class="card-title">2 Factor Authentication</h4>
+						<form novalidate="" id="mfa-form">
+							<div class="form-group mb-3">
+								<div class="wrapper">
+									<input type="number" maxlength="6" id="mfa-input" name="mfa" placeholder=" " autocomplete="off" tabindex="1" required autofocus>
+									<label for="mfa-input">2FA</label>
+								</div>
+								<p class="small-text hidden" data-labelledby="mfa-input">A valid 2FA code is required</p>
+							</div>
+
+							<div class="form-group">
+								<button type="submit" class="btn" tabindex="1">
+									<span>Login</span>
+									<span class="dots"></span>
+								</button>
+								<p class="small-text hidden" data-labelledby="general-error">Something went wrong</p>
+							</div>
+						</form>
+					</div>
+				</div>
+			<% } else if (locals.page === "reset-password") { %>
+				<div class="card fat" data-page="reset-password">
+					<div class="card-body">
+						<h4 class="card-title">Password Reset</h4>
+						<form novalidate="" id="reset-password-form">
+							<div class="form-group mb-3">
+								<div class="wrapper">
+									<div class="input-wrapper">
+										<input type="password" id="new-password-input" name="password" placeholder=" " autocomplete="new-password" tabindex="1" required>
+										<button class="btn show-password-btn" type="button">
+											<i class="fa-solid fa-eye"></i>
+										</button>
+									</div>
+									<label for="new-password-input">New Password</label>
+								</div>
+								<p class="small-text hidden" data-labelledby="new-password-input">A valid password is required</p>
+							</div>
+							<div class="form-group">
+								<div class="wrapper">
+									<div class="input-wrapper">
+										<input type="password" id="repeat-password-input" name="password" placeholder=" " autocomplete="new-password" tabindex="1" required>
+										<button class="btn show-password-btn" type="button">
+											<i class="fa-solid fa-eye"></i>
+										</button>
+									</div>
+									<label for="repeat-password-input">Repeat Password</label>
+								</div>
+								<p class="small-text hidden" data-labelledby="repeat-password-input">A valid password is required</p>
+							</div>
+
+							<div class="form-group">
+								<button type="submit" class="btn" tabindex="1">
+									<span>Change Password</span>
+									<span class="dots"></span>
+								</button>
+								<p class="small-text hidden" data-labelledby="general-error">Something went wrong</p>
+							</div>
+						</form>
+					</div>
+				</div>
+			<% } else { %>
+				<div class="card fat<%= locals.allowRegistrations ? " small-mb" : "" %>" data-page="login">
+					<div class="card-body">
+						<h4 class="card-title">Login</h4>
+						<form novalidate="" id="login-form">
+							<div class="form-group mb-3">
+								<div class="wrapper">
+									<input type="text" id="username-input" name="username" placeholder=" " autocomplete="email" tabindex="1" required autofocus>
+									<label for="username-input">Username</label>
+								</div>
+								<p class="small-text hidden" data-labelledby="username-input">A valid username is required</p>
+							</div>
+	
+							<div class="form-group">
+								<div class="wrapper">
+									<div class="input-wrapper">
+										<input type="password" id="password-input" name="password" placeholder=" " autocomplete="current-password" tabindex="1" required>
+										<button class="btn show-password-btn" type="button">
+											<i class="fa-solid fa-eye"></i>
+										</button>
+									</div>
+									<label for="password-input">Password</label>
+								</div>
+								<p class="small-text hidden" data-labelledby="password-input">A valid password is required</p>
+							</div>
+	
+							<div class="form-group">
+								<button type="submit" class="btn" tabindex="1">
+									<span>Login</span>
+									<span class="dots"></span>
+								</button>
+								<p class="small-text hidden" data-labelledby="general-error">Something went wrong</p>
+							</div>
+						</form>
+	
+						<% if (locals.allowRegistrations === true) { %>
+							<p class="no-account">Don't have an account? <a href="/auth/register" target="_self" id="no-account-btn">Create one!</a></p>
+						<% } %>
+					</div>
+				</div>
+			<% } %>
+
+			<!-- Error Pages -->
+			<div class="card fat hidden" data-page="error">
+				<div class="card-body">
+					<h1 class="card-title"></h1>
+          <p class="lead"></p>
+          <button class="btn btn-primary-blue btn-accessible" tabindex="1">
+						<span></span>
+						<span class="dots"></span>
+					</button>
+					<p class="small-text hidden"></p>
+					<p class="small-text code text-center hidden"></p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+  <%- include("../includes/footer.ejs") %>
+</body>
+</html>

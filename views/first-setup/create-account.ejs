@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("../includes/head.ejs") %>
+  <title>Create Account &mdash; Welsh Wedding Photography</title>
+
+  <link rel="stylesheet" href="/assets/css/global/utils.css">
+  <link rel="stylesheet" href="/assets/css/first-setup/create-account.css">
+
+	<script src="/assets/js/global/utils.js"></script>
+	<script src="/assets/js/first-setup/create-account.js"></script>
+</head>
+
+<% if (locals.options && options.theme) { %> 
+  <body data-theme="<%= options.theme %>">
+<% } else { %> 
+  <body data-theme="system">
+<% } %> 
+	<%- include("../includes/body") %>
+
+  <header>
+    <div class="header-btns">
+      <a class="btn btn-transparent btn-border" href="/first-setup" target="_self">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Back</span>
+      </a>
+    </div>
+    <div class="text-wrapper">
+      <h2>Root Account for SSL Manager</h2>
+      <p>Create an administrator account for this site</p>
+    </div>
+  </header>
+	
+	<section>
+		<div class="wrapper">
+			<div class="card fat" data-page="create-account">
+				<div class="card-body">
+					<h4 class="card-title">Create Account</h4>
+					<form novalidate="" id="create-account-form">
+						<div class="form-group mb-3">
+              <div class="wrapper">
+								<input type="text" id="username-input" name="username" placeholder=" " autocomplete="email" tabindex="1" required autofocus>
+                <label for="username-input">Username</label>
+							</div>
+              <p class="small-text hidden" data-labelledby="username-input">A valid username is required</p>
+            </div>
+
+            <div class="form-group mb-3">
+              <div class="wrapper">
+                <div class="input-wrapper">
+                  <input type="password" id="password-input" name="password" placeholder=" " autocomplete="new-password" tabindex="1" required>
+                  <button class="btn show-password-btn" type="button">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+                <label for="password-input">Password</label>
+              </div>
+              <p class="small-text hidden" data-labelledby="password-input">A valid password is required</p>
+            </div>
+            <div class="form-group">
+              <div class="wrapper">
+                <div class="input-wrapper">
+                  <input type="password" id="repeat-password-input" name="repeat-password" placeholder=" " autocomplete="new-password" tabindex="1" required>
+                  <button class="btn show-password-btn" type="button">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </div>
+                <label for="repeat-password-input">Repeat Password</label>
+              </div>
+              <p class="small-text hidden" data-labelledby="repeat-password-input">A valid password is required</p>
+            </div>
+
+						<div class="form-group">
+							<button type="submit" class="btn" tabindex="1">
+								<span>Create Account</span>
+								<span class="dots"></span>
+							</button>
+							<p class="small-text hidden" data-labelledby="general-error">Something went wrong</p>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<!-- Error Pages -->
+			<div class="card fat hidden" data-page="error">
+				<div class="card-body">
+					<h1 class="card-title"></h1>
+          <p class="lead"></p>
+          <button class="btn btn-primary-blue btn-accessible" tabindex="1">
+						<span></span>
+						<span class="dots"></span>
+					</button>
+					<p class="small-text hidden"></p>
+					<p class="small-text code text-center hidden"></p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+  <%- include("../includes/footer.ejs") %>
+</body>
+</html>

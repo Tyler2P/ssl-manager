@@ -1,0 +1,80 @@
+.modal {
+  --bs-modal-zindex: 12;
+  --bs-modal-padding: 1rem;
+  --bs-modal-width: 35rem;
+  --bs-modal-margin: 0.5rem;
+  --bs-modal-color: rgb(255, 255, 255);
+  --bs-modal-bg: rgb(56, 53, 53);
+  --bs-modal-border-color: var(--bs-border-color-translucent);
+  --bs-modal-border-width: 1px;
+  --bs-modal-border-radius: 0.5rem;
+  --bs-modal-inner-border-radius: calc(0.5rem - 1px);
+  --bs-modal-title-line-height: 1.5;
+}
+body[data-theme="light"] .modal {
+  --bs-modal-color: rgb(50, 50, 50);
+  --bs-modal-bg: rgb(255, 255, 255);
+  --bs-modal-border-color: var(--bs-border-color-translucent);
+}
+
+.modal.show {
+  display: block;
+  z-index: 12;
+}
+.modal .modal-content {
+  box-shadow: none;
+  padding: var(--bs-modal-padding);
+}
+
+.modal button.close-btn {
+  position: absolute;
+  border: none;
+  color: rgb(225, 225, 225);
+  font-size: 1.2rem;
+  top: .3rem;
+  right: .3rem;
+}
+body[data-theme="light"] .modal button.close-btn {
+  color: rgb(100, 100, 100);
+}
+.modal button.close-btn:hover,
+.modal button.close-btn:focus,
+.modal button.close-btn:active {
+  color: rgb(255, 255, 255);
+  background-color: rgba(255, 255, 255, .2);
+}
+body[data-theme="light"] .modal button.close-btn:hover,
+body[data-theme="light"] .modal button.close-btn:focus,
+body[data-theme="light"] .modal button.close-btn:active {
+  color: rgb(65, 65, 65);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.modal button.close-btn:focus {
+  border: 1px solid;
+}
+.modal h3 {
+  margin-bottom: 2rem;
+}
+
+@media (prefers-color-scheme: light) {
+  body[data-theme="system"] .modal {
+    --bs-modal-color: rgb(50, 50, 50);
+    --bs-modal-bg: rgb(255, 255, 255);
+    --bs-modal-border-color: var(--bs-border-color-translucent);
+    --bs-modal-box-shadow: 25px 25px 77px #dbdbdb, -25px -25px 77px #ffffff;
+  }
+
+  @media (prefers-contrast: more) {
+    body[data-theme="system"] .modal {
+      --bs-modal-border-color: var(--secondary-contrast-color);
+    }
+  }
+}
+@media (prefers-contrast: more) {
+  .modal {
+    --bs-modal-border-color: var(--secondary-contrast-color);
+  }
+  body[data-theme="light"] .modal {
+    --bs-modal-border-color: var(--secondary-contrast-color);
+  }
+}

@@ -1,0 +1,229 @@
+body > header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10vh;
+  gap: 1rem;
+}
+body > header > .header-btns {
+  width: 30rem;
+  margin-bottom: .5rem;
+}
+body > header > .header-btns i {
+  margin-right: .5rem;
+}
+
+/* Card */
+section > .wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 60dvh;
+}
+section > .wrapper > .card {
+  --bs-card-bg: rgb(56, 53, 53);
+  width: 30rem;
+}
+section > .wrapper > .card.hidden {
+  display: none;
+}
+section > .wrapper > .card > .card-body {
+  padding: 4rem 3rem;
+}
+body[data-theme="light"] section > .wrapper > .card {
+  --bs-card-bg: rgb(105, 105, 105);
+  --bs-card-border-color: rgb(191 191 191);
+}
+section > .wrapper > .card h4 {
+  --bs-card-title-spacer-y: 2rem;
+}
+body[data-theme="light"] section > .wrapper > .card h4 {
+  color: rgb(243, 243, 243);
+}
+
+/* Form */
+section .card form .small-text {
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+section .card form .small-text.error {
+  color: rgb(255, 0, 0);
+}
+section .card form .small-text.hidden {
+  display: none;
+}
+section .card form .wrapper {
+  --input-border-color: rgb(209, 209, 209);
+  --input-bg-color: transparent;
+  --card-bg-color: rgb(56, 53, 53);
+  position: relative;
+  width: 100%;
+  height: 3rem;
+}
+body[data-theme="light"] section .card form .wrapper {
+  --input-border-color: rgb(230, 230, 230);
+  --card-bg-color: rgb(105, 105, 105);
+}
+section .card form .wrapper > label {
+  transition: transform 120ms ease-in, color 120ms ease-in, background 300ms ease;
+  position: absolute;
+  font-weight: bold;
+  white-space: nowrap;
+  cursor: text;
+  padding: calc(.5rem * 0.75) calc(.5rem * .5);
+  margin: calc(.5rem * 0.75 + 3px) calc(.5rem * .5);
+  color: rgb(250, 252, 253);
+  transform: translate(0, 0);
+  background-color: var(--card-bg-color);
+  transform-origin: 0 0;
+  opacity: 1;
+  line-height: 1.2;
+  left: 0;
+  top: 0;
+}
+section .card form .wrapper input {
+  border: 3px solid var(--input-border-color);
+  box-sizing: border-box;
+  display: block;
+  background-color: var(--input-bg-color);
+  color: rgb(255, 255, 255);
+  padding: calc(.5rem * 1.5) .5rem;
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+}
+section .card form .wrapper > .input-wrapper {
+  border: 3px solid var(--input-border-color);
+  display: flex;
+  border-radius: .4rem;
+}
+section .card form .wrapper > .input-wrapper > input {
+  border: none;
+}
+section .card form .wrapper > .input-wrapper > button.show-password-btn {
+  --bs-btn-color: rgb(250, 252, 253);
+  --bs-btn-hover-color: rgb(185, 185, 185);
+  --bs-btn-active-color: rgb(185, 185, 185);
+  --bs-btn-disabled-color: rgb(185, 185, 185);
+}
+
+section .card form .wrapper > input:focus + label,
+section .card form .wrapper > input:active + label,
+section .card form .wrapper > input:not(:placeholder-shown) + label,
+section .card form .wrapper > .input-wrapper:has(input:focus) + label,
+section .card form .wrapper > .input-wrapper:has(input:active) + label,
+section .card form .wrapper > .input-wrapper:has(input:not(:placeholder-shown)) + label {
+  transform: translate(.25rem, -70%) scale(.95);
+  color: var(--themed-text-color-dark);
+}
+
+section .card form button[type="submit"] {
+  --bs-btn-color: rgb(255, 255, 255);
+  --bs-btn-active-color: rgb(255, 255, 255);
+  --bs-btn-hover-color: rgb(255, 255, 255);
+  --bs-btn-disabled-color: rgb(255, 255, 255);
+  --bs-btn-bg: var(--themed-text-color-dark);
+  --bs-btn-border-color: rgb(29, 159, 255);
+  --bs-btn-hover-bg: rgb(29, 159, 255);
+  --bs-btn-hover-border-color: rgb(0, 128, 222);
+  --bs-btn-active-bg: rgb(29, 159, 255);
+  --bs-btn-active-border-color: rgb(0, 128, 222);
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-bg: rgb(0, 128, 222);
+  --bs-btn-disabled-border-color: rgb(29, 159, 255);
+
+  margin-top: 1.5rem;
+  width: 100%;
+  height: 2.5rem;
+}
+body[data-theme="light"] section .card form button[type="submit"] {
+  --bs-btn-bg: var(--themed-text-color-dark);
+  --bs-btn-border-color: rgb(29, 159, 255);
+  --bs-btn-hover-bg: rgb(29, 159, 255);
+  --bs-btn-hover-border-color: rgb(0, 128, 222);
+  --bs-btn-active-bg: rgb(29, 159, 255);
+  --bs-btn-active-border-color: rgb(0, 128, 222);
+  --bs-btn-disabled-bg: rgb(0, 128, 222);
+  --bs-btn-disabled-border-color: rgb(29, 159, 255);
+}
+section .card form button[type="submit"]:focus {
+  --bs-btn-border-width: 2px;
+  border-color: rgb(205, 205, 205);
+}
+body[data-theme="light"] section .card form button[type="submit"]:focus {
+  border-color: rgb(60, 60, 60);
+}
+
+/* Error Card */
+section > .wrapper > .card[data-page="error"] {
+  --bs-card-title-spacer-y: 1.5rem;
+}
+section > .wrapper > .card[data-page="error"] > .card-body {
+  padding: 4rem 3.5rem 2rem 3.5rem;
+}
+section > .wrapper > .card[data-page="error"] h1 {
+  color: rgb(202, 202, 202);
+  font-size: 2rem;
+}
+section > .wrapper > .card[data-page="error"] p.lead {
+  margin-bottom: 2rem;
+}
+section > .wrapper > .card[data-page="error"] p.small-text:not(.code) {
+  margin-top: 2rem;
+  margin-bottom: 0;
+}
+section > .wrapper > .card[data-page="error"] p.small-text.code {
+  font-size: .9rem;
+  margin-top: 2rem;
+}
+section > .wrapper > .card[data-page="error"] .btn-primary-blue {
+  width: 100%;
+  height: 2.5rem;
+}
+
+@media (prefers-color-scheme: light) {
+  body[data-theme="system"] section .card form a {
+    --bs-link-color: rgb(19, 226, 137);
+    --bs-link-hover-color: rgb(14, 175, 106);
+  }
+  body[data-theme="system"] section > .wrapper > .card {
+    --bs-card-bg: rgb(105, 105, 105);
+    --bs-card-border-color: rgb(191, 191, 191);
+  }
+  body[data-theme="system"] section > .wrapper > .card h4 {
+    color: rgb(243, 243, 243);
+  }
+  body[data-theme="system"] section .card form .wrapper {
+    --input-border-color: rgb(230, 230, 230);
+    --card-bg-color: rgb(105, 105, 105);
+  }
+  body[data-theme="system"] section .card form button[type="submit"]:focus {
+    border-color: rgb(60, 60, 60);
+  }
+}
+
+@media (max-width: 520px) {
+  section > .wrapper > .card {
+    width: 25rem;
+  }
+  section > .wrapper > .card > .card-body {
+    padding: 3rem 2rem;
+  }
+}
+@media (max-width: 450px) {
+  section > .wrapper > .card {
+    width: 90dvw;
+  }
+  section > .wrapper > .card > .card-body {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-height: 760px) and (orientation: landscape) {
+  footer {
+    position: relative;
+    margin-top: 4rem;
+  }
+}

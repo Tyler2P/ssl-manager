@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include("../includes/head") %>
+  <title>Logged Out &mdash; SSL Manager</title>
+  <link rel="stylesheet" href="/assets/css/global/errors.css">
+  <link rel="stylesheet" href="/assets/css/global/footer.css">
+</head>
+
+<% if (locals.options && options.theme) { %> 
+  <body data-theme="<%= options.theme %>">
+<% } else { %> 
+  <body data-theme="system">
+<% } %> 
+
+  <%- include("../includes/body") %>
+    
+  <div class="container">
+    <div class="wrapper text-center bg-transparent">
+      <h1 class="display-3">Logout Successful</h1>
+      <p class="lead">You have been logged out successfully</p>
+      <a class="btn btn-responsive" href="/">Login</a>
+    </div>
+  </div>
+
+  <%- include("../includes/footer.ejs", { static: true }) %>
+
+  <script>
+    // Check if cookies are enabled
+    if (!navigator.cookieEnabled) {
+      let wrapper = document.querySelector("body > .container > .wrapper");
+      let cookieWrapper = wrapper.appendChild(document.createElement("div"));
+      cookieWrapper.classList.add("cookie-wrapper");
+      cookieWrapper.style.marginTop = "2rem";
+      let p = cookieWrapper.appendChild(document.createElement("p"));
+      p.style.color = "red";
+      p.style.fontWeight = "bold";
+      p.style.fontSize = "1.25rem";
+      p.innerText = "Note: Cookies must be enabled to use our services";
+    }
+  </script>
+</body>
+
+</html>

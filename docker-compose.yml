@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  ssl-manager:
+    container_name: ssl-manager
+    pull_policy: build
+    build: .
+    ports:
+      - 6007:6007
+    restart: unless-stopped
+    environment:
+      - MYSQL_USERNAME=${MYSQL_USERNAME}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_SERVER=${MYSQL_SERVER}
+      - MYSQL_DB_NAME=${MYSQL_DB_NAME}
+      - MAX_DB_CONNECTIONS=${MAX_DB_CONNECTIONS}
+      - EMAIL_ENABLED=${EMAIL_ENABLED}
+      - EMAIL_SERVER=${EMAIL_SERVER}
+      - EMAIL_SSL_ENABLED=${EMAIL_SSL_ENABLED}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - EMAIL_FROM_NAME=${EMAIL_FROM_NAME}
+      - EMAIL_FROM_ADDRESS=${EMAIL_FROM_ADDRESS}
+      - CONFIG_DIRECTORY=${CONFIG_DIRECTORY}
+      - PRIMARY_DOMAIN=${PRIMARY_DOMAIN}
+      - WEBSITE_DOMAINS=${WEBSITE_DOMAINS}
+      - SERVER_PORT=${SERVER_PORT}
+      - NODE_ENV=${NODE_ENV}

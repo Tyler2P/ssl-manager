@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include("../includes/head") %>
+  <title>Expired Link &mdash; SSL Manager</title>
+  <link rel="stylesheet" href="/assets/css/global/errors.css">
+  <link rel="stylesheet" href="/assets/css/global/footer.css">
+</head>
+
+<% if (locals.options && options.theme) { %> 
+  <body data-theme="<%= options.theme %>">
+<% } else { %> 
+  <body data-theme="system">
+<% } %> 
+  <%- include("../includes/body") %>
+
+  <div class="container">
+    <div class="wrapper text-center bg-transparent">
+      <h1 class="display-3">Link Expired</h1>
+      <p class="lead">Unfortunately, the link you have provided has expired</p>
+      <p class="lead">If you need help, please contact the Website Administrator</p>
+      <a class="btn btn-responsive" href="/">Login</a>
+    </div>
+  </div>
+
+  <%- include("../includes/footer.ejs", { static: true }) %>
+</body>
+
+</html>

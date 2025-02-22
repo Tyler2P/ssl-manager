@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("../includes/head.ejs") %>
+  <title>Overview &mdash; SSL Manager</title>
+  <link rel="stylesheet" href="/assets/css/global/utils.css">
+  <link rel="stylesheet" href="/assets/css/global/modals.css">
+  <link rel="stylesheet" href="/assets/css/global/header.css">
+  <link rel="stylesheet" href="/assets/css/global/form.css">
+  <link rel="stylesheet" href="/assets/css/dashboard/overview.css">
+  <script src="/assets/js/global/utils.js"></script>
+  <script src="/assets/js/dashboard/overview.js"></script>
+</head>
+
+<% if (locals.options && options.theme) { %> 
+  <body data-theme="<%= options.theme %>">
+<% } else { %> 
+  <body data-theme="system">
+<% } %> 
+  <%- include("../includes/body.ejs") %>
+  <%- include("../includes/header.ejs") %>
+
+  <div class="page">
+    <div class="wrapper">
+      <div class="stats-row">
+        <div class="widget" data-widget="total-certificates">
+          <p class="dynamic-data"><%= locals.stats?.totalCertificates || "0" %></p>
+          <p class="widget-title">Total Certificates</p>
+        </div>
+        <div class="widget" data-widget="expiring-certificates">
+          <p class="dynamic-data"><%= locals.stats?.expiringCertificates || "0" %></p>
+          <p class="widget-title">Expiring Certificates</p>
+        </div>
+      </div>
+
+      <div class="cert-header">
+        <button class="btn btn-responsive" data-action="create-cert">
+          <i class="fa-solid fa-add"></i>
+          <span class="dots"></span>
+          <span>New Certificate</span>
+        </button>
+        <button class="btn btn-responsive" data-action="renew-all-cert">
+          <i class="fa-solid fa-arrows-rotate"></i>
+          <span class="dots"></span>
+          <span>Renew All</span>
+        </button>
+      </div>
+
+      <div class="certs">
+        <% if (Array.isArray(locals.certs) && certs.length > 0) { %>
+          <div class="list">
+
+          </div>
+        <% } else { %>
+          <div class="no-certs-error">
+            <h3>No Certificates!</h3>
+            <p>Create your first certificate here!</p>
+            <button class="btn btn-green" id="error-create-cert-btn">
+              Create Certificate
+            </button>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <div id="new-certificate-modal" class="modal" tabindex="-1" aria-hidden="true" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="dialog">
+      <div class="modal-content">
+        <button type="button" class="btn close-btn" aria-label="Close" tabindex="2">
+          <i class="fa-solid fa-times"></i>
+        </button>
+
+        <h3>Create Certificate</h3>
+        <p>Create a new SSL certificate</p>
+
+        <form novalidate="" id="new-certificate-form" class="global-settings">
+          <div class="form-group mb-3">
+            <div class="wrapper">
+              <input type="text" id="cert-name-input" name="cert-name" placeholder=" " autocomplete="off" tabindex="1" required>
+              <label for="cert-name-input">Name <span class="required">*</span></label>
+            </div>
+            <p class="small-text hidden" data-labelledby="cert-name-input">A valid name is required</p>
+          </div>
+          <div class="form-group mb-3">
+            <div class="wrapper">
+              <textarea name="cert-description" id="cert-description-input" placeholder=" " autocomplete="off" tabindex="1"></textarea>
+              <label for="cert-description-input">Description</label>
+            </div>
+            <p class="small-text hidden" data-labelledby="cert-description-input">A valid description is required</p>
+          </div>
+          <div class="title-wrapper">
+            <div class="left-border"></div>
+            <p>Domains</p>
+            <div class="right-border"></div>
+          </div>
+          <div class="form-group multi-input mb-3" id="cert-domains-inputs">
+            <input type="text" name="cert-domain-1" placeholder="example.com" autocomplete="off" tabindex="1" required>
+            <button class="btn btn-transparent">
+              <i class="fa-solid fa-add"></i>
+            </button>
+          </div>
+
+          <button type="submit" class="btn btn-green" data-action="create">
+            <span class="dots"></span>
+            <span>Create</span>
+          </button>
+          <button type="reset" class="btn btn-transparent" data-action="cancel">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

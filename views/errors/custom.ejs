@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include("../includes/head") %>
+  <% if (locals.statusCode) { %>
+    <title>Error <%= statusCode %> &mdash; SSL Manager</title>
+  <% } else { %>
+    <title>Error &mdash; SSL Manager</title>
+  <% } %> 
+  <link rel="stylesheet" href="/assets/css/global/errors.css">
+  <link rel="stylesheet" href="/assets/css/global/footer.css">
+</head>
+
+<% if (locals.options && options.theme) { %> 
+  <body data-theme="<%= options.theme %>">
+<% } else { %> 
+  <body data-theme="system">
+<% } %> 
+  <%- include("../includes/body") %>
+
+  <div class="container">
+    <div class="wrapper text-center bg-transparent">
+      <h1 class="display-3">
+        <%= locals.title %>
+      </h1>
+      <p class="lead">
+        <%= locals.description %>
+      </p>
+      <% if (typeof buttons == "object") { %>
+        <% buttons.forEach(button => { %>
+          <% if (button.name && button.link && button.external) { %> 
+            <a class="btn btn-responsive" href=<%= button.link %> target="_blank"><%= button.name %></a>
+          <% } else if (button.name && button.link) { %> 
+            <a class="btn btn-responsive" href=<%= button.link %>><%= button.name %></a>
+          <% } else if (button.name && button.click) { %>
+            <a class="btn btn-responsive" onclick=<%= button.click %>><%= button.name %></a>
+          <% } %> 
+        <% }); %> 
+      <% } else { %> 
+        <a class="btn btn-responsive" onclick="window.history.go(-1)">Go Back</a>
+      <% } %> 
+    </div>
+  </div>
+
+  <%- include("../includes/footer.ejs", { static: true }) %>
+</body>
+
+</html>
