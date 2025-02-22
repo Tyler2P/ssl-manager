@@ -30,7 +30,16 @@ module.exports = function(dbPool) {
     else if (!profile)
       return res.status(400).json({ error: "Invalid DNS Profile provided", code: 4002 });
 
-    
+    if (!description || description === "")
+      description = null;
+
+    if (domain && domains)
+      domains.push(domain);
+    else if (!domains)
+      domains = [domain];
+
+    if (domains.length > 100)
+      return res.status(400).json({ error: "Too many domains provided", code: 4016 });
   });
 
   return router;
