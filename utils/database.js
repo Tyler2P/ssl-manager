@@ -192,6 +192,7 @@ module.exports = {
         \`provider\` varchar(255) NOT NULL COMMENT 'The DNS provider',
         \`api_key\` text COMMENT 'The API key for the DNS provider',
         \`api_url\` text COMMENT 'The API URL for the DNS provider',
+        \`zone_id\` text COMMENT 'The zone ID for the DNS provider (Cloudflare)',
         UNIQUE (\`id\`)
       )
     `);
@@ -200,6 +201,8 @@ module.exports = {
     await db.query(`
       CREATE TABLE IF NOT EXISTS \`certs\` (
         \`id\` char(25) NOT NULL COMMENT 'The certs ID',
+        \`created_at\` timestamp COMMENT 'When the cert was created',
+        \`created_by\` varchar(25) COMMENT 'Who the cert was created by',
         \`name\` varchar(255) NOT NULL COMMENT 'The name of the certificate',
         \`description\` text COMMENT 'A description of the certificate',
         \`domains\` MEDIUMTEXT NOT NULL COMMENT 'The domains on this certificate',

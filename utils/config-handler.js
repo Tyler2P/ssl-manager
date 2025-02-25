@@ -138,6 +138,7 @@ module.exports = {
         maximumUserPermissions: 0,
         allowRegistrations: false,
         forceMFA: false,
+        emailAddress: null,
         rootUser: {},
         ...config
       }

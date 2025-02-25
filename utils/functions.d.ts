@@ -33,7 +33,7 @@ interface emailData {
  */
 export function defineDB(db: PoolConnection): void;
 /**
- * Get ta database connection
+ * Get a database connection
  * @returns The database connection
  */
 export function getDB(): Promise<PoolConnection>;

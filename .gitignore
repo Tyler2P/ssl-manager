@@ -131,3 +131,6 @@ dist
 
 .DS_Store
 Thumbs.db
+
+# Config File
+config.yml

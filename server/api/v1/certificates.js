@@ -1,6 +1,7 @@
 const cache = require("../../../utils/cache");
 const { users, hasNumber } = require("../../../utils/functions");
 const { checkRequest, getAuth } = require("../../../utils/functions").API;
+const acme = require("acme-client");
 const router = require("express").Router();
 
 module.exports = function(dbPool) {
@@ -38,8 +39,60 @@ module.exports = function(dbPool) {
     else if (!domains)
       domains = [domain];
 
-    if (domains.length > 100)
-      return res.status(400).json({ error: "Too many domains provided", code: 4016 });
+    if (domains.length > 40)
+      return res.status(400).json({ error: "Too many domains provided", code: 4005 });
+
+    const domainRegex =  /^(((?!-))(xn--|_)?[a-z0-9-]{0,61}[a-z0-9]{1,1}\.)*(xn--)?([a-z0-9][a-z0-9\-]{0,60}|[a-z0-9-]{1,30}\.[a-z]{2,})$/;
+    const validDomains = domains.filter(domain => domain.match(domainRegex));
+    if (validDomains.length !== domains.length)
+      return res.status(400).json({ error: "Invalid domain(s) provided", code: 4006 });
+
+    // Fetch a database connection
+    const db = await dbPool.getConnection();
+
+    // Fetch profile
+    let [dbProfile] = await db.query("SELECT * FROM dns_profiles WHERE id = ?", [profile]);
+    if (!dbProfile[0])
+      return res.status(400).json({ error: "Invalid DNS Profile provided", code: 4002 });
+
+    dbProfile = profileRow[0];
+
+    // Generate an SSL certificate
+    const client = new acme.Client({
+      directoryUrl: acme.directory.letsencrypt.production,
+      accountKey: await acme.forge.createPrivateKey()
+    });
+
+    const [key, csr] = await acme.forge.createCsr({
+      commonName: domain,
+      altNames: domains
+    });
+
+    const [keyPem, csrPem] = await Promise.all([key.export(), csr.export()]);
+
+    // Save the CSR and key to the SSL certs directory
+    const certDir = `${cache.config.sslCertsDir}/${domain}`;
+    const csrFile = `${certDir}/${domain}.csr`;
+    const keyFile = `${certDir}/${domain}.key`;
+
+    await fs.mkdir(certDir, { recursive: true });
+    await fs.writeFile(csrFile, csrPem);
+    await fs.writeFile(keyFile, keyPem);
+
+    // Generate the certificate
+    const cert = await client.auto({
+      csr: csrPem,
+      email: cache.config.emailAddress,
+      termsOfServiceAgreed: true,
+      challengePriority: ["dns-01"],
+      challengeCreateFn,
+      challengeRemoveFn
+    });
+
+    // Save the certificate
+    const certFile = `${certDir}/${domain}.crt`;
+    await fs.writeFile(certFile, cert);
+
   });
 
   return router;
