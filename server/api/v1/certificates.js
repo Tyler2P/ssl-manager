@@ -29,7 +29,7 @@ module.exports = function(dbPool) {
     if (cache.config.defaultProfile && !profile)
       profile = cache.config.defaultProfile;
     else if (!profile)
-      return res.status(400).json({ error: "Invalid DNS Profile provided", code: 4002 });
+      errors.push({ msg: "Invalid DNS Profile provided", type: "dns_profile" });
 
     if (!description || description === "")
       description = null;
@@ -40,7 +40,10 @@ module.exports = function(dbPool) {
       domains = [domain];
 
     if (domains.length > 40)
-      return res.status(400).json({ error: "Too many domains provided", code: 4005 });
+      errors.push({ msg: "Too many domains provided", type: "domains" });
+
+    if (errors.length > 0)
+      return res.status(400).json({ errors, code: 4015 });
 
     const domainRegex =  /^(((?!-))(xn--|_)?[a-z0-9-]{0,61}[a-z0-9]{1,1}\.)*(xn--)?([a-z0-9][a-z0-9\-]{0,60}|[a-z0-9-]{1,30}\.[a-z]{2,})$/;
     const validDomains = domains.filter(domain => domain.match(domainRegex));
@@ -55,7 +58,7 @@ module.exports = function(dbPool) {
     if (!dbProfile[0])
       return res.status(400).json({ error: "Invalid DNS Profile provided", code: 4002 });
 
-    dbProfile = profileRow[0];
+    dbProfile = dbProfile[0];
 
     // Generate an SSL certificate
     const client = new acme.Client({

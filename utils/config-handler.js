@@ -23,7 +23,7 @@ async function syncDatabase(config, file, existingFile) {
     const db = await getDB();
     if (!db) return console.log(formatLog("ERROR", "Unable to sync new root user details. A restart may be required to resolve this issue"));
 
-    const [user] = await db.execute("SELECT * FROM users WHERE user_id = ?", [file.rootUser?.id]);
+    let [user] = await db.execute("SELECT * FROM users WHERE user_id = ?", [file.rootUser?.id]);
 
     if (!user || (user.length || 0) < 1) {
       console.log(formatLog("INFO", "Root user account has been created in the database"));
@@ -86,6 +86,42 @@ module.exports = {
       console.log(formatLog("WARN", "Site configuration file has failed tests. Reason: Root user's username has been altered"));
       return false;
     }
+
+    // Ensure the root account matches with database
+    (async function() {
+      const db = await getDB();
+      let accChanged = false;
+
+      let [user] = await db.execute("SELECT * FROM users WHERE user_id = ?", [file.rootUser?.id]);
+
+      if (!user || (user.length || 0) < 1) {
+        await db.execute(`
+          INSERT INTO users (
+            user_id, username, joined_at, permissions, perms_read_only, password
+          )
+          VALUES (
+            ?, ?, CURRENT_TIMESTAMP, ?, 1, ?
+          )
+        `, [file.rootUser?.id, file.rootUser?.username, file.maximumUserPermissions || 0, file.rootUser?.password]);
+        console.log(formatLog("INFO", "Root user account has been created in the database"));
+        return;
+      }
+      user = user[0];
+
+      if (user.username !== file.rootUser?.username)
+        accChanged = true;
+      if (user.password !== file.rootUser?.password)
+        accChanged = true;
+      if (user.permissions !== file.maximumUserPermissions)
+        accChanged = true;
+
+      if (accChanged) {
+        await db.execute("UPDATE users SET username=?, password=? WHERE user_id=? LIMIT 1", [file.rootUser?.username, file.rootUser?.password, file.rootUser?.id]);
+        console.log(formatLog("INFO", "Root user account has been altered in the configuration file. Database has been updated to reflect changes"));
+      }
+
+      db.release();
+    }());
 
     console.log(formatLog("INFO", "Site configuration file passed tests"));
     cache.firstSetup = false;

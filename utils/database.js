@@ -187,6 +187,8 @@ module.exports = {
     await db.query(`
       CREATE TABLE IF NOT EXISTS \`dns_profiles\` (
         \`id\` INT AUTO_INCREMENT PRIMARY KEY,
+        \`created_at\` timestamp COMMENT 'When the DNS Profile was created',
+        \`created_by\` varchar(25) COMMENT 'Who the DNS Profile was created by',
         \`name\` varchar(255) NOT NULL COMMENT 'The name of the DNS profile',
         \`description\` text COMMENT 'A description of the DNS profile',
         \`provider\` varchar(255) NOT NULL COMMENT 'The DNS provider',

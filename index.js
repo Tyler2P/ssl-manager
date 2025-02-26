@@ -11,7 +11,12 @@ const app = express();
 if (!process.env.NODE_ENV || ["DEV", "DEVELOPMENT"].includes(process.env.NODE_ENV)) {
   // Load ENV variables
   require("dotenv").config();
-  console.log(formatLog("INFO", "Environment variables have been set"))
+  console.log(formatLog("INFO", "Environment variables have been set"));
+
+  if ((process.env.MAX_DB_CONNECTIONS || 5) < 3) {
+    console.log(formatLog("WARN", "Environment variable 'MAX_DB_CONNECTIONS' needs to be greater than 2 for this application to work correctly. Defaulting to 5"));
+    process.env.MAX_DB_CONNECTIONS = 5;
+  }
 }
 
 (async () => {
