@@ -3,6 +3,7 @@
     "Bitfield",
     "bitfields",
     "bullmq",
+    "letsencrypt",
     "otpauth"
   ]
 }

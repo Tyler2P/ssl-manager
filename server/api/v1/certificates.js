@@ -66,25 +66,36 @@ module.exports = function(dbPool) {
       accountKey: await acme.forge.createPrivateKey()
     });
 
-    const [key, csr] = await acme.forge.createCsr({
-      commonName: domain,
+    // const [key, csr] = await acme.forge.createCsr({
+    //   commonName: domain,
+    //   altNames: domains
+    // });
+
+    const privateRsaKey = await acme.crypto.createPrivateRsaKey();
+    const privateEcdsaKey = await acme.crypto.createPrivateEcdsaKey();
+
+    const [certificateKey, certificateCsr] = await acme.crypto.createCsr({
       altNames: domains
     });
 
-    const [keyPem, csrPem] = await Promise.all([key.export(), csr.export()]);
+    console.log("privateRsaKey: " + privateRsaKey);
+    console.log("privateEcdsaKey: " + privateEcdsaKey);
 
-    // Save the CSR and key to the SSL certs directory
-    const certDir = `${cache.config.sslCertsDir}/${domain}`;
-    const csrFile = `${certDir}/${domain}.csr`;
-    const keyFile = `${certDir}/${domain}.key`;
+    
+    // const [keyPem, csrPem] = await Promise.all([key.export(), csr.export()]);
 
-    await fs.mkdir(certDir, { recursive: true });
-    await fs.writeFile(csrFile, csrPem);
-    await fs.writeFile(keyFile, keyPem);
+    // // Save the CSR and key to the SSL certs directory
+    // const certDir = `${cache.config.sslCertsDir}/${domain}`;
+    // const csrFile = `${certDir}/${domain}.csr`;
+    // const keyFile = `${certDir}/${domain}.key`;
+
+    // await fs.mkdir(certDir, { recursive: true });
+    // await fs.writeFile(csrFile, csrPem);
+    // await fs.writeFile(keyFile, keyPem);
 
     // Generate the certificate
     const cert = await client.auto({
-      csr: csrPem,
+      csr: certificateCsr,
       email: cache.config.emailAddress,
       termsOfServiceAgreed: true,
       challengePriority: ["dns-01"],

@@ -25,15 +25,13 @@ module.exports = {
     if (!dnsProfile["api_key"])
       return false;
   
-    const url = `https://api.cloudflare.com/client/v4/zones/${dnsProfile["zone_id"]}/dns_records`;
+    // const url = `https://api.cloudflare.com/client/v4/zones/${dnsProfile["zone_id"]}/dns_records`;
+    const url = dnsProfile["api_url"];
     const headers = {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${dnsProfile["api_key"]}`
     }
 
-    
-  },
-  updateDNS_Porkbun: async function(domain, record, value) {
-
+    // Replace variables in URL    
   },
 }
