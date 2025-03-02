@@ -1,5 +1,8 @@
 const cache = require("./cache");
 const acme = require("acme-client");
+const fs = require("fs/promises");
+const { existsSync } = require("fs");
+const path = require("path");
 const { updateDNS } = require("./dns-handler");
 const { getDB, formatLog } = require("./functions");
 
@@ -40,9 +43,7 @@ module.exports = {
       return null;
 
     const client = new acme.Client({
-      // TODO: Add support for production
-      directoryUrl: acme.directory.letsencrypt.staging,
-      // directoryUrl: (type || "PRODUCTION").toUpperCase() === "STAGING" ? acme.directory.letsencrypt.staging : acme.directory.letsencrypt.production,
+      directoryUrl: (type || "PRODUCTION").toUpperCase() === "STAGING" ? acme.directory.letsencrypt.staging : acme.directory.letsencrypt.production,
       accountKey: await acme.forge.createPrivateKey()
     });
     
@@ -62,24 +63,58 @@ module.exports = {
       email: emailAddr,
       termsOfServiceAgreed: true,
       challengePriority: ["dns-01"],
-      challengeCreateFn: async (authz, challenge, keyAuthorization) => {
+      challengeCreateFn: async (authz, _challenge, keyAuthorization) => {
         const dnsRecord = `_acme-challenge.${authz.identifier.value}`;
-        // const dnsValue = await acme.crypto.digest({ input: keyAuthorization });
         const dnsValue = keyAuthorization;
 
         // Update the DNS records
         await updateDNS(db, dnsProfile, dnsRecord, dnsValue);
       },
-      challengeRemoveFn: async (authz, challenge, keyAuthorization) => {
-        const dnsRecord = `_acme-challenge.${authz.identifier.value}`;
+      // challengeRemoveFn: async (authz, challenge, keyAuthorization) => {
+      //   const dnsRecord = `_acme-challenge.${authz.identifier.value}`;
 
-        // Remove the DNS records
-        await updateDNS(db, dnsProfile, dnsRecord, null);
-      }
+      //   // Remove the DNS records
+      //   await updateDNS(db, dnsProfile, dnsRecord, null);
+      // }
     }).catch((e) => {
-      console.log(formatLog("ERROR", "Failed to generate SSL certificate: " + domains[0]));
+      console.log(formatLog("ERROR", "Failed to generate SSL certificate for: " + domains[0]));
       console.log(e);
     });
+
+    // Ensure cert was generated
+    if (!cert) {
+      console.log(formatLog("ERROR", "Certificate generation failed for: " + domains[0]));
+      return null;
+    } else {
+      console.log(formatLog("SUCCESS", "Certificate generated successfully for: " + domains[0]));
+    }
+
+    // Split the cert string into two parts: Server Certificate & CA Chain
+    const certParts = cert.split(/(?=-----BEGIN CERTIFICATE-----)/g);
+    if (certParts.length < 2) {
+      console.log(formatLog("ERROR", "Unexpected certificate format returned from acme-client:"));
+      console.log(cert);
+      return null;
+    }
+
+    const [serverCert, caCert] = certParts;  // First is the domain cert, second is the CA chain
+
+    // Define certificate directory
+    const certDir = path.join(process.env.SSL_DIRECTORY, domains[0].replace("*.", ""));
+
+    if (!existsSync(certDir))
+    await fs.mkdir(certDir, { recursive: true });
+
+    // Save the private key
+    await fs.writeFile(path.join(certDir, "privkey.pem"), certKey);
+
+    // Save the server certificate
+    await fs.writeFile(path.join(certDir, "cert.pem"), serverCert);
+
+    // Save the CA chain
+    await fs.writeFile(path.join(certDir, "chain.pem"), caCert);
+
+    console.log(formatLog("INFO", "Certificate for: " + domains[0] + ". Has been saved in" + certDir));
   },
   renewCert: async function(db, id) {
 
