@@ -61,57 +61,7 @@ module.exports = function(dbPool) {
 
     dnsProfile = dnsProfile[0];
 
-    // Generate an SSL certificate
-    // const client = new acme.Client({
-    //   directoryUrl: acme.directory.letsencrypt.production,
-    //   accountKey: await acme.forge.createPrivateKey()
-    // });
-
-    // const [key, csr] = await acme.forge.createCsr({
-    //   commonName: domain,
-    //   altNames: domains
-    // });
-
-    // const privateRsaKey = await acme.crypto.createPrivateRsaKey();
-    // const privateEcdsaKey = await acme.crypto.createPrivateEcdsaKey();
-
-    // const [certificateKey, certificateCsr] = await acme.crypto.createCsr({
-    //   altNames: domains
-    // });
-
-    // console.log("privateRsaKey: " + privateRsaKey);
-    // console.log("privateEcdsaKey: " + privateEcdsaKey);
-
-    
-    // const [keyPem, csrPem] = await Promise.all([key.export(), csr.export()]);
-
-    // // Save the CSR and key to the SSL certs directory
-    // const certDir = `${cache.config.sslCertsDir}/${domain}`;
-    // const csrFile = `${certDir}/${domain}.csr`;
-    // const keyFile = `${certDir}/${domain}.key`;
-
-    // await fs.mkdir(certDir, { recursive: true });
-    // await fs.writeFile(csrFile, csrPem);
-    // await fs.writeFile(keyFile, keyPem);
-
-    // Generate the certificate
-    // const cert = await client.auto({
-    //   csr: certificateCsr,
-    //   email: cache.config.emailAddress,
-    //   termsOfServiceAgreed: true,
-    //   challengePriority: ["dns-01"],
-    //   challengeCreateFn,
-    //   challengeRemoveFn
-    // });
-
-    // // Save the certificate
-    // const certFile = `${certDir}/${domain}.crt`;
-    // await fs.writeFile(certFile, cert);
-
-    console.log("Creating certificate...");
-
-    createCert(db, domains, cache.config.emailAddress, dnsProfile);
-
+    createCert(domains, cache.config.emailAddress, dnsProfile);
   });
 
   return router;
