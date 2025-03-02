@@ -1,17 +1,22 @@
-const cache = require("./cache");
-const acme = require("acme-client");
-const fs = require("fs/promises");
 const { existsSync } = require("fs");
-const path = require("path");
 const { updateDNS } = require("./dns-handler");
 const { getDB, formatLog } = require("./functions");
+const cache = require("./cache");
+const { parseDomain, ParseResultType } = require("parse-domain");
+const acme = require("acme-client");
+const fs = require("fs/promises");
+const path = require("path");
 
 module.exports = {
-  createCert: async function(db, domains, emailAddr, dnsProfile, type) {
-    // Ensure a database connection has been established
-    if (!db) await getDB();
-    if (!db) return null;
-
+  /**
+   * Create an SSL certificate
+   * @param {array} domains A list of domains included in the SSL certificate
+   * @param {string} emailAddr The email address assigned with the SSL certificate
+   * @param {string} dnsProfile The ID assigned with the DNS Profile
+   * @param {string} type The type of certificate to create
+   * @returns Whether the function was successful
+   */
+  createCert: async function(domains, emailAddr, dnsProfile, type) {
     // Ensure domain is valid
     if (!Array.isArray(domains) && typeof domains === "string")
       domains = [domains];
@@ -24,23 +29,34 @@ module.exports = {
     if (!emailAddr)
       emailAddr = cache.config.emailAddress;
     if (!emailAddr)
-      return null;
+      return false;
+
+    // Get a database connection
+    const db = await getDB();
 
     // Get the profile ID
     if (typeof dnsProfile === "string") {
       [dnsProfile] = await db.query("SELECT * FROM dns_profiles WHERE id = ?", [dnsProfile]);
-      if (!dnsProfile[0])
-        return null;
+      if (!dnsProfile[0]) {
+        db.release();
+        return false;
+      }
       dnsProfile = dnsProfile[0];
     }
-    if (!dnsProfile)
-      return null;
+    if (!dnsProfile) {
+      db.release();
+      return false;
+    }
 
     // Ensure the DNS profile has required parameters
-    if (!dnsProfile["api_key"])
-      return null;
-    if (!dnsProfile["api_create_url"])
-      return null;
+    if (!dnsProfile["api_key"]) {
+      db.release();
+      return false;
+    }
+    if (!dnsProfile["api_create_url"]) {
+      db.release();
+      return false;
+    }
 
     const client = new acme.Client({
       directoryUrl: (type || "PRODUCTION").toUpperCase() === "STAGING" ? acme.directory.letsencrypt.staging : acme.directory.letsencrypt.production,
@@ -68,13 +84,13 @@ module.exports = {
         const dnsValue = keyAuthorization;
 
         // Update the DNS records
-        await updateDNS(db, dnsProfile, dnsRecord, dnsValue);
+        await updateDNS(dnsProfile, dnsRecord, dnsValue);
       },
       // challengeRemoveFn: async (authz, challenge, keyAuthorization) => {
       //   const dnsRecord = `_acme-challenge.${authz.identifier.value}`;
 
       //   // Remove the DNS records
-      //   await updateDNS(db, dnsProfile, dnsRecord, null);
+      //   await updateDNS(dnsProfile, dnsRecord, null);
       // }
     }).catch((e) => {
       console.log(formatLog("ERROR", "Failed to generate SSL certificate for: " + domains[0]));
@@ -84,9 +100,7 @@ module.exports = {
     // Ensure cert was generated
     if (!cert) {
       console.log(formatLog("ERROR", "Certificate generation failed for: " + domains[0]));
-      return null;
-    } else {
-      console.log(formatLog("SUCCESS", "Certificate generated successfully for: " + domains[0]));
+      return false;
     }
 
     // Split the cert string into two parts: Server Certificate & CA Chain
@@ -94,7 +108,7 @@ module.exports = {
     if (certParts.length < 2) {
       console.log(formatLog("ERROR", "Unexpected certificate format returned from acme-client:"));
       console.log(cert);
-      return null;
+      return false;
     }
 
     const [serverCert, caCert] = certParts;  // First is the domain cert, second is the CA chain
@@ -115,8 +129,6 @@ module.exports = {
     await fs.writeFile(path.join(certDir, "chain.pem"), caCert);
 
     console.log(formatLog("INFO", "Certificate for: " + domains[0] + ". Has been saved in" + certDir));
-  },
-  renewCert: async function(db, id) {
-
-  },
+    return true;
+  }
 }
