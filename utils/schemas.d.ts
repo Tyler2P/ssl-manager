@@ -1,3 +1,5 @@
+type APIMethods = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
 interface UserSchema {
   user_id: string;
   last_seen: Date | null;
@@ -79,11 +81,19 @@ interface AuthServicesGroupsSchema {
 }
 interface DnsProfilesSchema {
   id: number;
+  created_at: Date;
+  created_by: string;
   name: string;
   description: string | null;
   provider: string;
-  api_key: string | null;
-  api_url: string | null;
+  api_key: string;
+  api_create_url: string;
+  api_update_url: string | null;
+  api_delete_url: string | null;
+  zone_id: string | null;
+  api_create_dns_method: APIMethods;
+  api_update_dns_method: APIMethods | null;
+  api_delete_dns_method: APIMethods | null;
 }
 interface ArchivedEmailsSchema {
   email_id: string;

@@ -187,14 +187,19 @@ module.exports = {
     await db.query(`
       CREATE TABLE IF NOT EXISTS \`dns_profiles\` (
         \`id\` INT AUTO_INCREMENT PRIMARY KEY,
-        \`created_at\` timestamp COMMENT 'When the DNS Profile was created',
-        \`created_by\` varchar(25) COMMENT 'Who the DNS Profile was created by',
+        \`created_at\` timestamp NOT NULL COMMENT 'When the DNS Profile was created',
+        \`created_by\` varchar(25) NOT NULL COMMENT 'Who the DNS Profile was created by',
         \`name\` varchar(255) NOT NULL COMMENT 'The name of the DNS profile',
         \`description\` text COMMENT 'A description of the DNS profile',
         \`provider\` varchar(255) NOT NULL COMMENT 'The DNS provider',
-        \`api_key\` text COMMENT 'The API key for the DNS provider',
-        \`api_url\` text COMMENT 'The API URL for the DNS provider',
+        \`api_key\` text NOT NULL COMMENT 'The API key for the DNS provider',
+        \`api_create_url\` text NOT NULL COMMENT 'The API URL for the DNS provider to create a record',
+        \`api_update_url\` text COMMENT 'The API URL for the DNS provider to update a record',
+        \`api_delete_url\` text COMMENT 'The API URL for the DNS provider to delete a record',
         \`zone_id\` text COMMENT 'The zone ID for the DNS provider (Cloudflare)',
+        \`api_create_dns_method\` varchar(7) NOT NULL COMMENT 'The API method to create a DNS record',
+        \`api_update_dns_method\` varchar(7) COMMENT 'The API method to update a DNS record',
+        \`api_delete_dns_method\` varchar(7) COMMENT 'The API method to delete a DNS record',
         UNIQUE (\`id\`)
       )
     `);
@@ -207,6 +212,7 @@ module.exports = {
         \`created_by\` varchar(25) COMMENT 'Who the cert was created by',
         \`name\` varchar(255) NOT NULL COMMENT 'The name of the certificate',
         \`description\` text COMMENT 'A description of the certificate',
+        \`type\` tinyint NOT NULL COMMENT 'The type of certificate (production or staging)',
         \`domains\` MEDIUMTEXT NOT NULL COMMENT 'The domains on this certificate',
         \`dns_profile\` INT NOT NULL COMMENT 'The DNS profile associated with this certificate',
         UNIQUE (\`id\`)

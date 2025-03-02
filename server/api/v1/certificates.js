@@ -1,4 +1,5 @@
 const cache = require("../../../utils/cache");
+const { createCert } = require("../../../utils/certificate-handler");
 const { users, hasNumber } = require("../../../utils/functions");
 const { checkRequest, getAuth } = require("../../../utils/functions").API;
 const acme = require("acme-client");
@@ -54,32 +55,32 @@ module.exports = function(dbPool) {
     const db = await dbPool.getConnection();
 
     // Fetch profile
-    let [dbProfile] = await db.query("SELECT * FROM dns_profiles WHERE id = ?", [profile]);
-    if (!dbProfile[0])
+    let [dnsProfile] = await db.query("SELECT * FROM dns_profiles WHERE id = ?", [profile]);
+    if (!dnsProfile[0])
       return res.status(400).json({ error: "Invalid DNS Profile provided", code: 4002 });
 
-    dbProfile = dbProfile[0];
+    dnsProfile = dnsProfile[0];
 
     // Generate an SSL certificate
-    const client = new acme.Client({
-      directoryUrl: acme.directory.letsencrypt.production,
-      accountKey: await acme.forge.createPrivateKey()
-    });
+    // const client = new acme.Client({
+    //   directoryUrl: acme.directory.letsencrypt.production,
+    //   accountKey: await acme.forge.createPrivateKey()
+    // });
 
     // const [key, csr] = await acme.forge.createCsr({
     //   commonName: domain,
     //   altNames: domains
     // });
 
-    const privateRsaKey = await acme.crypto.createPrivateRsaKey();
-    const privateEcdsaKey = await acme.crypto.createPrivateEcdsaKey();
+    // const privateRsaKey = await acme.crypto.createPrivateRsaKey();
+    // const privateEcdsaKey = await acme.crypto.createPrivateEcdsaKey();
 
-    const [certificateKey, certificateCsr] = await acme.crypto.createCsr({
-      altNames: domains
-    });
+    // const [certificateKey, certificateCsr] = await acme.crypto.createCsr({
+    //   altNames: domains
+    // });
 
-    console.log("privateRsaKey: " + privateRsaKey);
-    console.log("privateEcdsaKey: " + privateEcdsaKey);
+    // console.log("privateRsaKey: " + privateRsaKey);
+    // console.log("privateEcdsaKey: " + privateEcdsaKey);
 
     
     // const [keyPem, csrPem] = await Promise.all([key.export(), csr.export()]);
@@ -94,18 +95,22 @@ module.exports = function(dbPool) {
     // await fs.writeFile(keyFile, keyPem);
 
     // Generate the certificate
-    const cert = await client.auto({
-      csr: certificateCsr,
-      email: cache.config.emailAddress,
-      termsOfServiceAgreed: true,
-      challengePriority: ["dns-01"],
-      challengeCreateFn,
-      challengeRemoveFn
-    });
+    // const cert = await client.auto({
+    //   csr: certificateCsr,
+    //   email: cache.config.emailAddress,
+    //   termsOfServiceAgreed: true,
+    //   challengePriority: ["dns-01"],
+    //   challengeCreateFn,
+    //   challengeRemoveFn
+    // });
 
-    // Save the certificate
-    const certFile = `${certDir}/${domain}.crt`;
-    await fs.writeFile(certFile, cert);
+    // // Save the certificate
+    // const certFile = `${certDir}/${domain}.crt`;
+    // await fs.writeFile(certFile, cert);
+
+    console.log("Creating certificate...");
+
+    createCert(db, domains, cache.config.emailAddress, dnsProfile);
 
   });
 
