@@ -206,14 +206,14 @@ module.exports = {
 
     // DNS Profiles
     await db.query(`
-      CREATE TABLE IF NOT EXISTS \`certs\` (
+      CREATE TABLE IF NOT EXISTS \`certificates\` (
         \`id\` char(25) NOT NULL COMMENT 'The certs ID',
-        \`created_at\` timestamp COMMENT 'When the cert was created',
+        \`created_at\` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT 'When the cert was created',
         \`created_by\` varchar(25) COMMENT 'Who the cert was created by',
         \`name\` varchar(255) NOT NULL COMMENT 'The name of the certificate',
         \`description\` text COMMENT 'A description of the certificate',
         \`type\` tinyint NOT NULL COMMENT 'The type of certificate (production or staging)',
-        \`domains\` MEDIUMTEXT NOT NULL COMMENT 'The domains on this certificate',
+        \`domains\` MEDIUMTEXT NOT NULL COMMENT 'The domains on this certificate. Separated by a comma',
         \`dns_profile\` INT NOT NULL COMMENT 'The DNS profile associated with this certificate',
         UNIQUE (\`id\`)
       )
