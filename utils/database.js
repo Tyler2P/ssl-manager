@@ -70,7 +70,7 @@ module.exports = {
     // Login data
     await db.query(`
       CREATE TABLE IF NOT EXISTS \`users\` (
-        \`user_id\` char(25) NOT NULL COMMENT 'The users ID',
+        \`user_id\` char(25) NOT NULL COMMENT 'The user\\'s ID',
         \`last_seen\` timestamp COMMENT 'When the user last logged in',
         \`joined_at\` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT 'When the user joined the site',
         \`fName\` varchar(255) COMMENT 'The user\\'s first name',
@@ -82,7 +82,7 @@ module.exports = {
         \`reset_password\` tinyint(1) DEFAULT '0' COMMENT 'Change the user\\'s password on next login?',
         \`password_update_date\` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT 'When the user\\'s password was last changed',
         \`permissions\` bigint NOT NULL DEFAULT '0' COMMENT 'The user\\'s custom site permissions. Represented as a BigInt',
-        \`perms_read_only\` tinyint(1) DEFAULT '0' COMMENT 'Whether the users permissions can be changed in the admin panel',
+        \`perms_read_only\` tinyint(1) DEFAULT '0' COMMENT 'Whether the user\\'s permissions can be changed in the admin panel',
         \`second_verification_enabled\` tinyint(1) DEFAULT '0' NOT NULL COMMENT 'Whether second verification is enabled',
         \`second_verification_token\` varchar(255) COMMENT 'The user\\'s second verification token',
         \`disabled\` tinyint(1) DEFAULT '0' COMMENT 'Whether the user\\'s account has been disabled',
@@ -252,6 +252,15 @@ module.exports = {
         \`fail_reason\` text COMMENT 'The reason that the email failed to send',
         \`retries\` int NOT NULL DEFAULT '1' COMMENT 'Number of attempts it takes for the email to send',
         UNIQUE (\`email_id\`)
+      )
+    `);
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS \`audit_log\` (
+        \`id\` varchar(30) NOT NULL COMMENT 'The ID of the audit log',
+        \`user_id\` char(25) NOT NULL COMMENT 'The user\\'s ID',
+        \`flag\` varchar(40) NOT NULL COMMENT 'The audit log flag',
+        FOREIGN KEY (\`user_id\`) REFERENCES \`users\`(\`user_id\`),
       )
     `);
 

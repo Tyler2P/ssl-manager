@@ -45,8 +45,13 @@ module.exports = function(dbPool) {
     else if (!domains)
       domains = [domain];
 
+    // Remove duplicate domains
+    domains = [...new Set(array)];
+
     if (domains.length > 40)
       errors.push({ msg: "Too many domains provided", type: "domains" });
+    if (domains.length < 1)
+      errors.push({ msg: "At least 1 valid domain must be provided", type: "domains" });
 
     if (errors.length > 0)
       return res.status(400).json({ errors, code: 4015 });
@@ -122,12 +127,17 @@ module.exports = function(dbPool) {
       else if (!domains && domain)
         domains = [domain];
 
-      // Combine domains
+      // Combine domains array
       domains = domains.concat(certificate.domains.split(","));
     }
 
+    // Remove duplicate domains
+    domains = [...new Set(array)];
+
     if (domains.length > 40)
       errors.push({ msg: "Too many domains provided", type: "domains" });
+    if (domains.length < 1)
+      errors.push({ msg: "At least 1 valid domain must be provided", type: "domains" });
 
     if (errors.length > 0)
       return res.status(400).json({ errors, code: 4015 });
@@ -138,11 +148,14 @@ module.exports = function(dbPool) {
       return res.status(400).json({ error: "Invalid domain(s) provided", code: 4006 });
 
     // Fetch profile
-    let [dnsProfile] = await db.query("SELECT * FROM dns_profiles WHERE id = ?", [profile]);
-    if (!dnsProfile[0])
-      return res.status(400).json({ error: "Invalid DNS Profile provided", code: 4002 });
+    let dnsProfile;
+    if (profile) {
+      [dnsProfile] = await db.execute("SELECT * FROM dns_profiles WHERE id = ?", [profile]);
+      if (!dnsProfile[0])
+        return res.status(400).json({ error: "Invalid DNS Profile provided", code: 4002 });
 
-    dnsProfile = dnsProfile[0];
+      dnsProfile = dnsProfile[0];
+    }
 
     let user = checkReq.user;
     if (!user) user = await users.findByOauth(API.getAuth(req.headers));
@@ -150,7 +163,37 @@ module.exports = function(dbPool) {
       return res.status(401).json({ error: "Unauthorized Request", code: 4010 });
 
     // Update the database
-    await db.query("INSERT INTO certificates (name, description, created_by, type, domains, dns_profile) VALUES (?, ?, ?, ?, ?, ?)", [name, description, user.user_id, type, domains.join(","), dnsProfile.id]);
+    if (req.method.toUpperCase() === "PUT") {
+      await db.query(`UPDATE certificates SET (name=?, description=?, type=?, domains=?${profile && dnsProfile ? ", dns_profile=?" : ""}) WHERE id = ?`, [name, description, type, domains.join(","), dnsProfile.id, req.params.id]);
+    } else {
+      let params = [];
+      let values = [];
+
+      if (name) {
+        params.push("name");
+        values.push(name);
+      }
+      if (description) {
+        params.push("description");
+        values.push(description);
+      }
+      if (domains) {
+        params.push("domains");
+        values.push(domains.join(","));
+      }
+      if (profile) {
+        params.push("profile");
+        values.push(dnsProfile.id);
+      }
+      if (type) {
+        params.push("type");
+        values.push(type);
+      }
+
+      if (params.length < 1 || values.length < 1) return res.status(400).json({ error: "", code:  });
+
+      
+    }
 
     return res.status(204).send();
   });
