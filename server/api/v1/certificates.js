@@ -190,7 +190,8 @@ module.exports = function(dbPool) {
         values.push(type);
       }
 
-      if (params.length < 1 || values.length < 1) return res.status(400).json({ error: "", code:  });
+      if (params.length < 1 || values.length < 1)
+        return res.status(400).json({ error: "", code: 401 });
 
       
     }
