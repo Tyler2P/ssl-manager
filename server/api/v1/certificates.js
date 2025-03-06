@@ -191,9 +191,12 @@ module.exports = function(dbPool) {
       }
 
       if (params.length < 1 || values.length < 1)
-        return res.status(400).json({ error: "", code: 401 });
+        return res.status(400).json({ error: "No changed detected. No changes were saved", code: 4002 });
 
-      
+      await db.query(
+        `UPDATE certificates SET (name=?, description=?, type=?, domains=?${profile && dnsProfile ? ", dns_profile=?" : ""}) WHERE id = ?`,
+        profile && dnsProfile ? [name, description, type, domains.join(","), dnsProfile.id, req.params.id] : [name, description, type, domains.join(","), req.params.id]
+      );
     }
 
     return res.status(204).send();
