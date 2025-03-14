@@ -34,19 +34,67 @@ document.addEventListener("DOMContentLoaded", function(event) {
   });
   createCertModal_form.addEventListener("submit", function(event) {
     event.preventDefault();
+
+    // Ensure that the button isn't already loading
+    if (createCertModal_createBtn.classList.contains("btn-loading")) return;
+    // Add loading state to button
     createCertModal_createBtn.classList.add("btn-loading");
 
     // Get form values
-    let name = document.getElementById("cert-name-input").value;
-    let description = document.getElementById("cert-description-input").value;
-    let type = document.getElementById("select[name=type]").value;
-    let domains = document.getElementById("cert-domains-inputs");
-    let dns_profile = document.getElementById("select[name=dns_profile]").value;
+    const name = document.getElementById("cert-name-input")?.value;
+    const description = document.getElementById("cert-description-input")?.value;
+    let type = document.getElementById("select[name=type]")?.value;
+    const domainsWrapper = document.getElementById("cert-domains-inputs");
+    const dns_profile = document.getElementById("select[name=dns_profile]")?.value;
+    const generalError = createCertModal_form.querySelector("p.small-text[data-labelledby=cert-create-error]");
 
+    // Validate form values
+    if (name.length < 3 || name.length > 255) {
+      let errorMsg = createCertModal_form.querySelector("p.small-text[data-labelledby=cert-name-input]");
+      errorMsg.textContent = "Invalid name provided";
+      errorMsg.classList.add("error");
+      errorMsg.classList.remove("hidden", "success");
+      createCertModal_createBtn.classList.remove("btn-loading");
+      return;
+    }
+    if ((description && !["", " "].includes(description.trim())) && (description.length < 3 || description.length > 255)) {
+      let errorMsg = createCertModal_form.querySelector("p.small-text[data-labelledby=cert-description-input]");
+      errorMsg.textContent = "Invalid description provided";
+      errorMsg.classList.add("error");
+      errorMsg.classList.remove("hidden", "success");
+      createCertModal_createBtn.classList.remove("btn-loading");
+      return;
+    }
+    if (type !== "staging" && type !== "production") {
+      type = null;
+    }
+  
+    // Find domains
+    let domainsElem = domainsWrapper.querySelectorAll(".domain-wrapper > input");
+    domains = Array.from(domainsElem).map((elem) => elem.value);
+    if (domains.length < 1) {
+      let errorMsg = createCertModal_form.querySelector("p.small-text[data-labelledby=cert-domains-inputs]");
+      errorMsg.textContent = "At least 1 valid domain must be provided";
+      errorMsg.classList.add("error");
+      errorMsg.classList.remove("hidden", "success");
+      createCertModal_createBtn.classList.remove("btn-loading");
+      return;
+    } else if (domains.length > 40) {
+      let errorMsg = createCertModal_form.querySelector("p.small-text[data-labelledby=cert-domains-inputs]");
+      errorMsg.textContent = "A maximum of 40 domains can be provided";
+      errorMsg.classList.add("error");
+      errorMsg.classList.remove("hidden", "success");
+      createCertModal_createBtn.classList.remove("btn-loading");
+      return;
+    }
+
+    console.log("sendign request!");
+
+    // Send request
     new request({
       method: "POST",
       url: "/api/v1/certificates/create",
-      header: {
+      headers: {
         "Authorization": "Bearer " + cookies.get("auth")
       },
       body: {
@@ -65,8 +113,38 @@ document.addEventListener("DOMContentLoaded", function(event) {
           createCertModal.setAttribute("tabindex", "-1");
           createCertModal.setAttribute("aria-hidden", "true");
         }
+      },
+      error: function(response) {
+        let code = response.data?.code;
+
+        generalError.classList.remove("hidden", "success");
+        generalError.classList.add("error");
+
+        if (code == 4015 && Array.isArray(response.data?.errors)) {
+          (response.data?.errors).forEach((error) => {
+            if (!error?.type) return console.log("[ERROR]: Unexpected data returned from API endpoint (Code: 6008)\n[DEBUG]: API Error code 4015 'error.type' not present");
+            let errorMsg = createCertModal_form.querySelector(`div.form-group > p.small-text[data-labelledby=${error.type}-input]`);
+            if (errorMsg) {
+              errorMsg.classList.remove("hidden");
+              errorMsg.textContent = error.error;
+            } else
+              console.log("[ERROR]: HTML element cannot be found (Code: 6001)\n" + `[DEBUG]: div.form-group > p.small-text[data-labelledby=${error.type}-input] (Code: 6001)`);
+          });
+        } else if (code === 4201) {
+          generalError.textContent = "Username or password incorrect (Code: 4201)";
+        } else if (code === 5002) {
+          generalError.textContent = "Too many requests, please try again later (Code: 5002)";
+        } else if (code === 5008) {
+          generalError.textContent = "This site has already been setup. If you have forgotten a local account's password, please refer to the official documentation (Code: 5008)";
+        } else if (response?.status === 408 || code === 4014) {
+          generalError.textContent = "Request timeout, please try again later (Code: 4014)";
+        } else if (response?.status === 503 || code === 6007) {
+          generalError.textContent = "Unable to connect to the server, please try again later (Code: 6007)";
+        } else {
+          generalError.textContent = `Something went wrong, please try again later (Code: ${response.data?.code || "0000"})`;
+        }
       }
-    }).send(false);
+    }).send(true, true);
   });
 
   if (errorCreateCertBtn instanceof HTMLButtonElement) {

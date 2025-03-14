@@ -31,7 +31,7 @@ module.exports = function(dbPool) {
     if (cache.config.defaultProfile && !profile)
       profile = cache.config.defaultProfile;
     else if (!profile)
-      errors.push({ msg: "Invalid DNS Profile provided", type: "dns_profile" });
+      errors.push({ msg: "Invalid DNS Profile provided", type: "dns-profile" });
 
     if (!description || description === "")
       description = null;
@@ -45,13 +45,20 @@ module.exports = function(dbPool) {
     else if (!domains)
       domains = [domain];
 
+    console.log("domains:");
+    console.log(domains);
+
     // Remove duplicate domains
-    domains = [...new Set(array)];
+    domains = [...new Set(domains)];
+
+    console.log(domains);
+    console.log(domains.length);
+    console.log(domains.length < 1);
 
     if (domains.length > 40)
       errors.push({ msg: "Too many domains provided", type: "domains" });
     if (domains.length < 1)
-      errors.push({ msg: "At least 1 valid domain must be provided", type: "domains" });
+      errors.push({ msg: "At least one valid domain must be provided", type: "domains" });
 
     if (errors.length > 0)
       return res.status(400).json({ errors, code: 4015 });
