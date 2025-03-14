@@ -32,6 +32,42 @@ document.addEventListener("DOMContentLoaded", function(event) {
       createCertModal.setAttribute("aria-hidden", "true");
     });
   });
+  createCertModal_form.addEventListener("submit", function(event) {
+    event.preventDefault();
+    createCertModal_createBtn.classList.add("btn-loading");
+
+    // Get form values
+    let name = document.getElementById("cert-name-input").value;
+    let description = document.getElementById("cert-description-input").value;
+    let type = document.getElementById("select[name=type]").value;
+    let domains = document.getElementById("cert-domains-inputs");
+    let dns_profile = document.getElementById("select[name=dns_profile]").value;
+
+    new request({
+      method: "POST",
+      url: "/api/v1/certificates/create",
+      header: {
+        "Authorization": "Bearer " + cookies.get("auth")
+      },
+      body: {
+        name,
+        description,
+        type,
+        domains,
+        dns_profile
+      },
+      callback: function() {
+        createCertModal_createBtn.classList.remove("btn-loading");
+      },
+      success: function(response) {
+        if (response.status === 200) {
+          createCertModal.classList.remove("show");
+          createCertModal.setAttribute("tabindex", "-1");
+          createCertModal.setAttribute("aria-hidden", "true");
+        }
+      }
+    }).send(false);
+  });
 
   if (errorCreateCertBtn instanceof HTMLButtonElement) {
     errorCreateCertBtn.addEventListener("click", function() {
