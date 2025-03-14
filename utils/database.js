@@ -260,7 +260,7 @@ module.exports = {
         \`id\` varchar(30) NOT NULL COMMENT 'The ID of the audit log',
         \`user_id\` char(25) NOT NULL COMMENT 'The user\\'s ID',
         \`flag\` varchar(40) NOT NULL COMMENT 'The audit log flag',
-        FOREIGN KEY (\`user_id\`) REFERENCES \`users\`(\`user_id\`),
+        FOREIGN KEY (\`user_id\`) REFERENCES \`users\`(\`user_id\`)
       )
     `);
 
