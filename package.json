@@ -33,6 +33,7 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.16",
     "otpauth": "^9.3.6",
-    "parse-domain": "^8.2.2"
+    "parse-domain": "^8.2.2",
+    "smb2": "^0.2.11"
   }
 }
