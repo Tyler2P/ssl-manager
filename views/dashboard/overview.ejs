@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/assets/css/global/form.css">
   <link rel="stylesheet" href="/assets/css/dashboard/overview.css">
   <script src="/assets/js/global/utils.js"></script>
+  <script src="/assets/js/global/form-dropdown.js"></script>
   <script src="/assets/js/dashboard/overview.js"></script>
 </head>
 
@@ -74,7 +75,7 @@
         <h3>Create Certificate</h3>
         <p>Create a new SSL certificate</p>
 
-        <form novalidate="" id="new-certificate-form" class="global-settings">
+        <form novalidate="" id="new-certificate-form" class="global-settings global-functionality">
           <div class="form-group mb-3">
             <div class="wrapper">
               <input type="text" id="cert-name-input" name="cert-name" placeholder=" " autocomplete="off" tabindex="1" required>
@@ -93,11 +94,16 @@
             <div class="form-group mb-3">
               <div class="wrapper">
                 <div class="dropdown">
-                  <input type="text" id="cert-dns-profile-input" class="dropdown-toggle" name="cert-dns-profile" placeholder="DNS Profile" autocomplete="off" tabindex="1" role="button">
+                  <input type="text" id="cert-dns-profile-input" class="dropdown-toggle" name="cert-dns-profile" placeholder="<%= locals.defaultDnsProfile?.name ? (defaultDnsProfile?.name).toUpperCase() : " " %>" autocomplete="off" tabindex="1" role="button">
+                  <label for="cert-dns-profile-input">DNS Profile</label>
 
                   <ul class="dropdown-menu">
                     <% dnsProfiles.forEach((profile) => { %>
-                      <li data-value="<%= profile.id %>" class="dropdown-item"><%= profile.name %></li>
+                      <% if (locals.defaultDnsProfile?.id === profile?.id) { %>
+                        <li data-value="<%= profile?.id || 0 %>" class="dropdown-item starred"><%= (profile?.name)?.toUpperCase() || "Unknown" %></li>
+                      <% } else { %>
+                        <li data-value="<%= profile?.id || 0 %>" class="dropdown-item"><%= (profile?.name)?.toUpperCase() || "Unknown" %></li>
+                      <% } %>
                     <% }); %>
                   </ul>
                 </div>
@@ -105,6 +111,20 @@
               <p class="small-text hidden" data-labelledby="cert-dns-profile-input">A valid DNS Profile is required</p>
             </div>
           <% } %>
+          <div class="form-group mb-3">
+            <div class="wrapper">
+              <div class="dropdown">
+                <input type="text" id="cert-type-input" class="dropdown-toggle" name="cert-type" placeholder="PRODUCTION" autocomplete="off" tabindex="1" role="button">
+                <label for="cert-type-input">Type <span class="required">*</span></label>
+
+                <ul class="dropdown-menu">
+                  <li data-value="1" class="dropdown-item">PRODUCTION</li>
+                  <li data-value="2" class="dropdown-item">STAGING</li>
+                </ul>
+              </div>
+            </div>
+            <p class="small-text hidden" data-labelledby="cert-type-input">A valid DNS Profile is required</p>
+          </div>
           <div class="title-wrapper">
             <div class="left-border"></div>
             <p>Domains</p>
@@ -114,8 +134,9 @@
             <div class="domain-wrapper">
               <input type="text" name="cert-domain-1" placeholder="example.com" autocomplete="off" tabindex="1" required>
             </div>
-            <button class="btn btn-transparent" type="button" data-action="add-domain">
+            <button class="btn btn-green" type="button" data-action="add-domain">
               <i class="fa-solid fa-add"></i>
+              <span>Add Domain</span>
             </button>
             <p class="small-text hidden" data-labelledby="cert-domains-input">At least one domain is required</p>
           </div>
@@ -125,7 +146,7 @@
             <span>Create</span>
           </button>
           <button type="reset" class="btn btn-transparent" data-action="cancel">Cancel</button>
-          <p class="small-text hidden" data-labelledby="cert-create-error">At least one domain is required</p>
+          <p class="small-text hidden" data-labelledby="cert-create-error">Something went wrong</p>
         </form>
       </div>
     </div>

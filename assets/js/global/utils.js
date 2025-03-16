@@ -303,3 +303,26 @@ const cookie = {
 this.cookies = cookie;
 
 this.cache = {};
+
+/**
+ * Create a string path to an element
+ * @param {Node} node The document node
+ * @returns {string} The path
+ */
+function createIndexedPathTo(node) {
+  var path = [];
+  while (node.tagName.toLowerCase() !== "body") {
+    var selector = node.tagName.toLowerCase();
+    if (node.id) {
+      selector = "#" + node.id;
+    } else if (node.className) {
+      selector += "." + node.className.split(" ").join(".");
+    }
+    if (node.hasAttribute("page")) {
+      selector += "[page=\"" + node.getAttribute("page") + "\"]";
+    }
+    path.unshift(selector);
+    node = node.parentNode;
+  }
+  return path.join(" > ");
+}

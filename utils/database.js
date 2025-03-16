@@ -212,9 +212,10 @@ module.exports = {
         \`created_by\` varchar(25) COMMENT 'Who the cert was created by',
         \`name\` varchar(255) NOT NULL COMMENT 'The name of the certificate',
         \`description\` text COMMENT 'A description of the certificate',
-        \`type\` tinyint NOT NULL COMMENT 'The type of certificate (production or staging)',
+        \`type\` tinyint(1) NOT NULL COMMENT 'The type of certificate (production or staging)',
         \`domains\` MEDIUMTEXT NOT NULL COMMENT 'The domains on this certificate. Separated by a comma',
         \`dns_profile\` INT NOT NULL COMMENT 'The DNS profile associated with this certificate',
+        \`disabled\` tinyint(1) DEFAULT '0' COMMENT 'Whether the certificate is disabled',
         UNIQUE (\`id\`)
       )
     `);

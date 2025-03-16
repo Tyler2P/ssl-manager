@@ -91,8 +91,15 @@
   height: 3px;
 }
 #new-certificate-modal form > .title-wrapper > .left-border {
-  width: 15px;
+  width: 50%;
 }
 #new-certificate-modal form > .title-wrapper > .right-border {
-  width: 55px;
+  width: 50%;
+}
+#new-certificate-modal form .form-group .dropdown > .dropdown-menu > li.starred:not(.selected)::after {
+  content: "\f005" "";
+  font-family: "Font Awesome 6 Free";
+  float: right;
+  color: rgb(246, 255, 0);
+  font-weight: 700;
 }

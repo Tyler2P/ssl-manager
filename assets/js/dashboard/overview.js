@@ -1,16 +1,12 @@
 document.addEventListener("DOMContentLoaded", function(event) {
   if (!event.isTrusted) return;
 
+  //- Handle the new certificate modal
   const createCertModal = document.getElementById("new-certificate-modal");
   const createCertModal_form = document.getElementById("new-certificate-form");
   const createCertModal_closeBtn = createCertModal.querySelector(".modal-content > button.close-btn");
   const createCertModal_cancelBtn = createCertModal.querySelector("#new-certificate-form > button[data-action=cancel]");
   const createCertModal_createBtn = createCertModal.querySelector("#new-certificate-form > button[data-action=create]");
-
-  const certsHeader = document.querySelector("body > .page > .wrapper > .cert-header");
-  const createCertHeaderBtn = certsHeader.querySelector("button[data-action=create-cert]");
-  const renewAllCertHeaderBtn = certsHeader.querySelector("button[data-action=renew-all-cert]");
-  const errorCreateCertBtn = document.getElementById("error-create-cert-btn");
 
   createCertModal.addEventListener("click", function(event) {
     let target = event.target;
@@ -88,8 +84,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
       return;
     }
 
-    console.log("sendign request!");
-
     // Send request
     new request({
       method: "POST",
@@ -117,35 +111,52 @@ document.addEventListener("DOMContentLoaded", function(event) {
       error: function(response) {
         let code = response.data?.code;
 
-        generalError.classList.remove("hidden", "success");
-        generalError.classList.add("error");
-
         if (code == 4015 && Array.isArray(response.data?.errors)) {
           (response.data?.errors).forEach((error) => {
             if (!error?.type) return console.log("[ERROR]: Unexpected data returned from API endpoint (Code: 6008)\n[DEBUG]: API Error code 4015 'error.type' not present");
-            let errorMsg = createCertModal_form.querySelector(`div.form-group > p.small-text[data-labelledby=${error.type}-input]`);
+            let errorMsg = createCertModal_form.querySelector(`div.form-group > p.small-text[data-labelledby=cert-${error.type}-input]`);
             if (errorMsg) {
               errorMsg.classList.remove("hidden");
               errorMsg.textContent = error.error;
             } else
-              console.log("[ERROR]: HTML element cannot be found (Code: 6001)\n" + `[DEBUG]: div.form-group > p.small-text[data-labelledby=${error.type}-input] (Code: 6001)`);
+              console.log("[ERROR]: HTML element cannot be found (Code: 6001)\n" + `[DEBUG]: div.form-group > p.small-text[data-labelledby=cert-${error.type}-input] (Code: 6001)`);
           });
         } else if (code === 4201) {
+          generalError.classList.remove("hidden", "success");
+          generalError.classList.add("error");
           generalError.textContent = "Username or password incorrect (Code: 4201)";
         } else if (code === 5002) {
+          generalError.classList.remove("hidden", "success");
+          generalError.classList.add("error");
           generalError.textContent = "Too many requests, please try again later (Code: 5002)";
         } else if (code === 5008) {
+          generalError.classList.remove("hidden", "success");
+          generalError.classList.add("error");
           generalError.textContent = "This site has already been setup. If you have forgotten a local account's password, please refer to the official documentation (Code: 5008)";
         } else if (response?.status === 408 || code === 4014) {
+          generalError.classList.remove("hidden", "success");
+          generalError.classList.add("error");
           generalError.textContent = "Request timeout, please try again later (Code: 4014)";
         } else if (response?.status === 503 || code === 6007) {
+          generalError.classList.remove("hidden", "success");
+          generalError.classList.add("error");
           generalError.textContent = "Unable to connect to the server, please try again later (Code: 6007)";
         } else {
+          generalError.classList.remove("hidden", "success");
+          generalError.classList.add("error");
           generalError.textContent = `Something went wrong, please try again later (Code: ${response.data?.code || "0000"})`;
         }
       }
     }).send(true, true);
   });
+
+
+  //- Handle main page functionality
+
+  const certsHeader = document.querySelector("body > .page > .wrapper > .cert-header");
+  const createCertHeaderBtn = certsHeader.querySelector("button[data-action=create-cert]");
+  const renewAllCertHeaderBtn = certsHeader.querySelector("button[data-action=renew-all-cert]");
+  const errorCreateCertBtn = document.getElementById("error-create-cert-btn");
 
   if (errorCreateCertBtn instanceof HTMLButtonElement) {
     errorCreateCertBtn.addEventListener("click", function() {

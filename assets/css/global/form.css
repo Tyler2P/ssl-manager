@@ -10,7 +10,8 @@ body[data-theme="light"] form.global-settings .wrapper {
   --input-border-color: rgb(230, 230, 230);
   --form-bg-color: rgb(105, 105, 105);
 }
-form.global-settings .wrapper > label {
+form.global-settings .wrapper > label,
+form.global-settings .wrapper > .dropdown > label {
   transition: transform 120ms ease-in, color 120ms ease-in, background 300ms ease;
   position: absolute;
   font-weight: bold;
@@ -27,7 +28,8 @@ form.global-settings .wrapper > label {
   left: 0;
   top: 0;
 }
-form.global-settings .wrapper > label > span.required {
+form.global-settings .wrapper > label > span.required,
+form.global-settings .wrapper > .dropdown > label > span.required {
   color: rgb(255, 0, 0);
 }
 form.global-settings .wrapper input,
@@ -64,7 +66,8 @@ form.global-settings .wrapper > input:active + label,
 form.global-settings .wrapper > input:not(:placeholder-shown) + label,
 form.global-settings .wrapper > .input-wrapper:has(input:focus) + label,
 form.global-settings .wrapper > .input-wrapper:has(input:active) + label,
-form.global-settings .wrapper > .input-wrapper:has(input:not(:placeholder-shown)) + label {
+form.global-settings .wrapper > .input-wrapper:has(input:not(:placeholder-shown)) + label,
+form.global-settings .wrapper > .dropdown > label {
   transform: translate(.25rem, -70%) scale(.95);
   color: var(--themed-text-color-dark);
 }
@@ -76,4 +79,144 @@ form.global-settings .wrapper > .input-wrapper:has(textarea:active) + label,
 form.global-settings .wrapper > .input-wrapper:has(textarea:not(:placeholder-shown)) + label {
   transform: translate(.25rem, -70%) scale(.95);
   color: var(--themed-text-color-dark);
+}
+
+/* Dropdown Menu */
+form.global-settings .wrapper .dropdown:not(.custom-settings) > button,
+form.global-settings .wrapper .dropdown:not(.custom-settings) > input {
+  text-align: left;
+  color: rgb(255, 255, 255);
+  min-width: 15rem;
+}
+form.global-settings .wrapper .dropdown:not(.custom-settings) > input {
+  cursor: text;
+}
+form.global-settings .wrapper .dropdown:not(.custom-settings) > input::placeholder {
+  color: rgb(145, 145, 145);
+}
+body[data-theme="light"] form.global-settings .wrapper .dropdown:not(.custom-settings) > input::placeholder {
+  color: rgb(6, 6, 7);
+}
+body[data-theme="light"] form.global-settings .wrapper .dropdown:not(.custom-settings) > button,
+body[data-theme="light"] form.global-settings .wrapper .dropdown:not(.custom-settings) > input {
+  color: rgb(6, 6, 7);
+}
+form.global-settings .wrapper .dropdown:not(.custom-settings) > button[aria-expanded="true"],
+form.global-settings .wrapper .dropdown:not(.custom-settings) > input[aria-expanded="true"] {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+form.global-settings .wrapper .dropdown:not(.custom-settings) > button:focus,
+form.global-settings .wrapper .dropdown:not(.custom-settings) > input:focus {
+  box-shadow: none;
+  border-color: rgb(32, 34, 37);
+}
+form.global-settings .wrapper .dropdown:not(.custom-settings) > button::after,
+form.global-settings .wrapper .dropdown:not(.custom-settings) > input::after {
+  display: inline-flex;
+  float: right;
+  transform: translateY(200%);
+}
+form.global-settings .wrapper .dropdown:not(.custom-settings) > button[aria-expanded="true"]::after,
+form.global-settings .wrapper .dropdown:not(.custom-settings) > input[aria-expanded="true"]::after {
+  transform: rotate(180deg) translateY(-200%);
+}
+
+form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu {
+  overflow-y: scroll;
+  border-color: rgb(32, 34, 37);
+  background-color: rgb(47, 49, 54);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-top: -6px !important;
+  padding-top: .1rem;
+  max-height: 15rem;
+  /* width: 15rem; */
+  width: 100%;
+}
+body[data-theme="light"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu {
+  border-color: rgb(177, 178, 180);
+  background-color: rgb(242, 243, 245);
+}
+form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu::-webkit-scrollbar-track {
+  background-color: rgb(47, 49, 54);
+  border-radius: 0;
+}
+form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li {
+  color: rgb(255, 255, 255);
+}
+form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li:hover,
+form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li:focus,
+form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li:active {
+  background-color: rgb(59, 63, 69);
+}
+body[data-theme="light"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li:hover,
+body[data-theme="light"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li:focus,
+body[data-theme="light"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li:active {
+  background-color: rgb(126, 127, 129);
+}
+form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li.selected {
+  cursor: default;
+  background-color: rgb(66, 70, 77);
+}
+body[data-theme="light"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li.selected {
+  background-color: rgb(126, 127, 129);
+}
+form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li.selected::after {
+  content: "\f058" "";
+  font-family: "Font Awesome 6 Free";
+  float: right;
+  color: var(--themed-text-color-dark);
+  font-weight: 700;
+}
+body[data-theme="light"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li.selected::after {
+  color: var(--themed-text-color-light);
+}
+
+@media (max-width: 980px) {
+  form.global-settings .wrapper .dropdown:not(.custom-settings) > button,
+  form.global-settings .wrapper .dropdown:not(.custom-settings) > input {
+    transition: all 300ms ease-in-out;
+    -webkit-transition: all 300ms ease-in-out;
+    min-width: 20rem;
+  }
+  form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu {
+    margin-top: -3px !important;
+    width: 20rem;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  body[data-theme="system"] form.global-settings .wrapper .dropdown:not(.custom-settings) > button,
+  body[data-theme="system"] form.global-settings .wrapper .dropdown:not(.custom-settings) > input {
+    border-color: rgb(177, 178, 180);
+    color: rgb(6, 6, 7);
+  }
+  body[data-theme="system"] form.global-settings .wrapper .dropdown:not(.custom-settings) > input::placeholder {
+    color: rgb(6, 6, 7);
+  }
+  body[data-theme="system"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu {
+    border-color: rgb(177, 178, 180);
+    background-color: rgb(242, 243, 245);
+  }
+  body[data-theme="system"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu::-webkit-scrollbar-thumb {
+    background-color: rgb(193, 195, 199);
+  }
+  body[data-theme="system"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu::-webkit-scrollbar-track {
+    background-color: rgb(242, 243, 245);
+  }
+  body[data-theme="system"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li {
+    color: rgb(6, 6, 7);
+  }
+  body[data-theme="system"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li:hover,
+  body[data-theme="system"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li:focus,
+  body[data-theme="system"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li:active {
+    background-color: rgb(220, 223, 227);
+  }
+  body[data-theme="system"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li.selected {
+    background-color: rgb(209, 213, 217);
+  }
+  body[data-theme="system"] form.global-settings .wrapper .dropdown:not(.custom-settings) > .dropdown-menu > li.selected::after {
+    color: var(--themed-text-color-light);
+  }
 }

@@ -23,7 +23,7 @@ module.exports = function(dbPool) {
     if (!name || name.length < 3 || name.length > 255)
       errors.push({ msg: "Invalid name provided", type: "name" });
     if (!domain && !Array.isArray(domains))
-      errors.push({ msg: "At least one domain must be provided", type: "domains" });
+      errors.push({ msg: "At least one valid domain must be provided", type: "domains" });
     
     if (errors.length > 0)
       return res.status(400).json({ errors, code: 4015 });
@@ -36,24 +36,17 @@ module.exports = function(dbPool) {
     if (!description || description === "")
       description = null;
     if (!type || !["staging", "production"].includes(type?.toLowerCase()))
-      type = "production";
+      type = 1; // Set to PRODUCTION
     else
-      type = type.toUpperCase();
+      type = type.toUpperCase().replace("PRODUCTION", 1).replace("STAGING", 2);
 
     if (domain && domains)
       domains.push(domain);
     else if (!domains)
       domains = [domain];
 
-    console.log("domains:");
-    console.log(domains);
-
     // Remove duplicate domains
     domains = [...new Set(domains)];
-
-    console.log(domains);
-    console.log(domains.length);
-    console.log(domains.length < 1);
 
     if (domains.length > 40)
       errors.push({ msg: "Too many domains provided", type: "domains" });
@@ -70,6 +63,13 @@ module.exports = function(dbPool) {
 
     // Fetch a database connection
     const db = await dbPool.getConnection();
+
+    // Ensure the domain doesn't exist in an existing certificate
+    for await (let domain of domains) {
+      let [existingCertificate] = await db.query("SELECT * FROM certificates WHERE domains = ? AND disabled=0", [domain]);
+      if (existingCertificate[0])
+        return res.status(400).json({ error: "One or more domains are already in use by another certificate", code: 4401 });
+    }
 
     // Fetch profile
     let [dnsProfile] = await db.query("SELECT * FROM dns_profiles WHERE id = ?", [profile]);

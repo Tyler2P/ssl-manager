@@ -11,7 +11,12 @@ module.exports = function(dbPool) {
     const checkReq = await checkRequest(req, res, { authCookie: true, authType: "Authorized" }, true);
     if (!checkReq?.bool) return;
 
-    sendPage(req, res, "dashboard/overview.ejs");
+    let [dnsProfiles] = await dbPool.query("SELECT id, name FROM dns_profiles");
+
+    sendPage(req, res, "dashboard/overview.ejs", {
+      dnsProfiles,
+      defaultDnsProfile: Array.isArray(dnsProfiles) ? dnsProfiles.find((x) => x.id === cache.config.defaultProfile) : null
+    });
   });
 
   return router;
