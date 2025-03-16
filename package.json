@@ -18,7 +18,7 @@
   "homepage": "https://github.com/Tyler2P/ssl-manager#readme",
   "dependencies": {
     "acme-client": "^5.4.0",
-    "axios": "^1.7.9",
+    "axios": "^1.8.3",
     "bcrypt": "^5.1.1",
     "bullmq": "^5.34.6",
     "cookie-parser": "^1.4.7",
@@ -31,7 +31,7 @@
     "js-yaml": "^4.1.0",
     "mysql2": "^3.12.0",
     "node-cron": "^3.0.3",
-    "nodemailer": "^6.9.16",
+    "nodemailer": "^6.10.0",
     "otpauth": "^9.3.6",
     "parse-domain": "^8.2.2",
     "smb2": "^0.2.11"
