@@ -4,9 +4,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
   //- Handle the new certificate modal
   const createCertModal = document.getElementById("new-certificate-modal");
   const createCertModal_form = document.getElementById("new-certificate-form");
+  const createCertModal_domainsWrapper = createCertModal_form.querySelector("#cert-domains-inputs > .inputs");
+  const createCertModal_addDomainBtn = createCertModal_form.querySelector("#cert-domains-inputs button[data-action=add-domain]");
   const createCertModal_closeBtn = createCertModal.querySelector(".modal-content > button.close-btn");
-  const createCertModal_cancelBtn = createCertModal.querySelector("#new-certificate-form > button[data-action=cancel]");
-  const createCertModal_createBtn = createCertModal.querySelector("#new-certificate-form > button[data-action=create]");
+  const createCertModal_cancelBtn = createCertModal.querySelector("#new-certificate-form > .form-btns >  button[data-action=cancel]");
+  const createCertModal_createBtn = createCertModal.querySelector("#new-certificate-form > .form-btns > button[data-action=create]");
 
   createCertModal.addEventListener("click", function(event) {
     let target = event.target;
@@ -26,6 +28,49 @@ document.addEventListener("DOMContentLoaded", function(event) {
       createCertModal.classList.remove("show");
       createCertModal.setAttribute("tabindex", "-1");
       createCertModal.setAttribute("aria-hidden", "true");
+    });
+  });
+  createCertModal_addDomainBtn.addEventListener("click", function() {
+    // Count how many input boxes are already present
+    const inputCount = createCertModal_domainsWrapper.querySelectorAll(".domain-wrapper input").length;
+    if (inputCount >= 40) {
+      const domainError = createCertModal_domainsWrapper.querySelector("p.small-text[data-labelledby=cert-domains-input]");
+      domainError.classList.remove("hidden", "success");
+      domainError.classList.add("error");
+      domainError.textContent = "A maximum of 40 domains can be provided";
+      return;
+    }
+
+    const wrapper = createCertModal_domainsWrapper.appendChild(document.createElement("div"));
+    wrapper.classList.add("domain-wrapper");
+    const input = wrapper.appendChild(document.createElement("input"));
+    input.setAttribute("type", "text");
+    input.setAttribute("name", "cert-domain-" + inputCount);
+    input.setAttribute("placeholder", "example.com");
+    input.setAttribute("required", "true");
+    input.setAttribute("autocomplete", "off");
+    input.setAttribute("tabindex", "1");
+    const deleteBtn = wrapper.appendChild(document.createElement("button"));
+    deleteBtn.setAttribute("type", "button");
+    deleteBtn.setAttribute("data-action", "delete-domain");
+    deleteBtn.setAttribute("tabindex", "1");
+    deleteBtn.setAttribute("title", "Delete domain");
+    deleteBtn.setAttribute("aria-label", "Delete domain");
+    deleteBtn.classList.add("btn", "btn-transparent");
+    const icon = deleteBtn.appendChild(document.createElement("i"));
+    icon.classList.add("fa-solid", "fa-xmark");
+
+    deleteBtn.addEventListener("click", function() {
+      const inputCount = createCertModal_domainsWrapper.querySelectorAll(".domain-wrapper input").length;
+      if (inputCount <= 1) {
+        const domainError = createCertModal_domainsWrapper.querySelector("p.small-text[data-labelledby=cert-domains-input]");
+        domainError.classList.remove("hidden", "success");
+        domainError.classList.add("error");
+        domainError.textContent = "A minimum of 1 domain must be present";
+        return;
+      }
+      wrapper.removeChild(input);
+      wrapper.removeChild(deleteBtn);
     });
   });
   createCertModal_form.addEventListener("submit", function(event) {

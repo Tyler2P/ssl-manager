@@ -38,6 +38,7 @@ body[data-theme="light"] section > .wrapper > .card {
 }
 section > .wrapper > .card h4 {
   --bs-card-title-spacer-y: 2rem;
+  color: rgb(213, 214, 215);
 }
 body[data-theme="light"] section > .wrapper > .card h4 {
   color: rgb(243, 243, 243);

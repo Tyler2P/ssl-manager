@@ -100,9 +100,9 @@
                   <ul class="dropdown-menu">
                     <% dnsProfiles.forEach((profile) => { %>
                       <% if (locals.defaultDnsProfile?.id === profile?.id) { %>
-                        <li data-value="<%= profile?.id || 0 %>" class="dropdown-item starred"><%= (profile?.name)?.toUpperCase() || "Unknown" %></li>
+                        <li data-value="<%= profile?.id || 0 %>" class="dropdown-item starred" role="button"><%= (profile?.name)?.toUpperCase() || "Unknown" %></li>
                       <% } else { %>
-                        <li data-value="<%= profile?.id || 0 %>" class="dropdown-item"><%= (profile?.name)?.toUpperCase() || "Unknown" %></li>
+                        <li data-value="<%= profile?.id || 0 %>" class="dropdown-item" role="button"><%= (profile?.name)?.toUpperCase() || "Unknown" %></li>
                       <% } %>
                     <% }); %>
                   </ul>
@@ -118,8 +118,8 @@
                 <label for="cert-type-input">Type <span class="required">*</span></label>
 
                 <ul class="dropdown-menu">
-                  <li data-value="1" class="dropdown-item">PRODUCTION</li>
-                  <li data-value="2" class="dropdown-item">STAGING</li>
+                  <li data-value="1" class="dropdown-item" role="button">PRODUCTION</li>
+                  <li data-value="2" class="dropdown-item" role="button">STAGING</li>
                 </ul>
               </div>
             </div>
@@ -131,8 +131,10 @@
             <div class="right-border"></div>
           </div>
           <div class="form-group multi-input mb-3" id="cert-domains-inputs">
-            <div class="domain-wrapper">
-              <input type="text" name="cert-domain-1" placeholder="example.com" autocomplete="off" tabindex="1" required>
+            <div class="inputs">
+              <div class="domain-wrapper" data-identifier="1">
+                <input type="text" name="cert-domain-1" placeholder="example.com" autocomplete="off" tabindex="1" required>
+              </div>
             </div>
             <button class="btn btn-green" type="button" data-action="add-domain">
               <i class="fa-solid fa-add"></i>
@@ -141,11 +143,13 @@
             <p class="small-text hidden" data-labelledby="cert-domains-input">At least one domain is required</p>
           </div>
 
-          <button type="submit" class="btn btn-green" data-action="create">
-            <span class="dots"></span>
-            <span>Create</span>
-          </button>
-          <button type="reset" class="btn btn-transparent" data-action="cancel">Cancel</button>
+          <div class="form-btns">
+            <button type="submit" class="btn btn-green" data-action="create">
+              <span class="dots"></span>
+              <span>Create</span>
+            </button>
+            <button type="reset" class="btn btn-transparent" data-action="cancel">Cancel</button>
+          </div>
           <p class="small-text hidden" data-labelledby="cert-create-error">Something went wrong</p>
         </form>
       </div>

@@ -16,6 +16,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
       const dropdownMenu = dropdown.querySelector(".dropdown-menu");
       const dropdownItems = dropdownMenu.querySelectorAll(".dropdown-item");
 
+      // Display the dropdown menu
+      (dropdownInput || dropdownBtn)?.addEventListener("focus", function(event) {
+        dropdownMenu.classList.add("show");
+      });
+      (dropdownInput || dropdownBtn)?.addEventListener("blur", function(event) {
+        setTimeout(() => dropdownMenu.classList.remove("show"), 300);
+      });
+
       // Filter the dropdown menu
       dropdown.addEventListener("keyup", function(event) {
         let input = event.target;
@@ -35,8 +43,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
       dropdownItems.forEach((item) => {
         item.addEventListener("click", function() {
+          console.log("Item clicked");
           // Ensure the item isn't already selected
           if (item.classList.contains("selected")) return;
+
+          console.log("Item clicked 1");
 
           // Remove all selected classes
           form.querySelectorAll(".dropdown-menu .dropdown-item.selected").forEach((item) => item.classList.remove("selected"));
@@ -46,9 +57,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
           item.classList.add("selected");
           if (dropdownInput) {
-            dropdownInput.setAttribute("value", value);
+            console.log("Dropdown input found");
+            dropdownInput.value = value;
             dropdownInput.setAttribute("data-value", valueId);
           } else if (dropdownBtn) {
+            console.log("Dropdown button found");
             dropdownBtn.textContent = value;
             dropdownBtn.setAttribute("data-value", valueId);
           } else {

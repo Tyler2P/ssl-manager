@@ -84,6 +84,12 @@
   font-weight: bold;
   margin: 0 .5rem;
 }
+#new-certificate-modal form > .form-btns {
+  margin-top: 1.5rem;
+}
+#new-certificate-modal form > .form-btns > button[data-action="create"]{
+  min-width: 5rem;
+}
 #new-certificate-modal form > .title-wrapper > .left-border,
 #new-certificate-modal form > .title-wrapper > .right-border {
   background-color: rgb(255, 255, 255);
@@ -102,4 +108,8 @@
   float: right;
   color: rgb(246, 255, 0);
   font-weight: 700;
+}
+#new-certificate-modal form .form-group button[data-action="add-domain"] {
+  width: 100%;
+  margin-top: 1rem;
 }
