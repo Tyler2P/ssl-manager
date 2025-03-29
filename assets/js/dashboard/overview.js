@@ -152,6 +152,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
           createCertModal.setAttribute("tabindex", "-1");
           createCertModal.setAttribute("aria-hidden", "true");
         }
+        createCertModal_form.reset();
       },
       error: function(response) {
         let code = response.data?.code;
@@ -166,10 +167,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
             } else
               console.log("[ERROR]: HTML element cannot be found (Code: 6001)\n" + `[DEBUG]: div.form-group > p.small-text[data-labelledby=cert-${error.type}-input] (Code: 6001)`);
           });
-        } else if (code === 4201) {
+        } else if (code === 4013) {
           generalError.classList.remove("hidden", "success");
           generalError.classList.add("error");
-          generalError.textContent = "Username or password incorrect (Code: 4201)";
+          generalError.textContent = "You do not have permission to preform this action (Code: 4013)";
+        } else if (code === 4401) {
+          generalError.classList.remove("hidden", "success");
+          generalError.classList.add("error");
+          if (response.data?.domain)
+            generalError.textContent = `The domain '${response.data.domain}' already exists in another certificate (Code: 4401)`;
+          else
+            generalError.textContent = "At least one of the domains provided is already used in another certificate (Code: 4401)";
+        } else if (code === 4402) {
+          generalError.classList.remove("hidden", "success");
+          generalError.classList.add("error");
+          generalError.textContent = "A certificate with this name already exists (Code: 4402)";
         } else if (code === 5002) {
           generalError.classList.remove("hidden", "success");
           generalError.classList.add("error");

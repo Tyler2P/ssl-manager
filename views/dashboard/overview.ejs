@@ -50,7 +50,13 @@
       <div class="certs">
         <% if (Array.isArray(locals.certs) && certs.length > 0) { %>
           <div class="list">
-
+            <% certs.forEach((cert) => { %>
+              <div class="cert" data-identifier="<%= cert.id %>">
+                <h4 data-parameter="name"><%= cert.name || "Unknown" %></h4>
+                <p data-parameter="type"><%= cert.type === 2 ? "STAGING" : "PRODUCTION" %></p>
+                
+              </div>
+            <% } %>
           </div>
         <% } else { %>
           <div class="no-certs-error">

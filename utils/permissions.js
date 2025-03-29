@@ -1,4 +1,5 @@
 /**
+ * CreateCertificates: Create new SSL certificates
  * ViewLogs: View the logs page in the admin panel
  * InviteUsers: Invite new users to the admin panel
  * ViewUsers: View the users page on the admin panel
@@ -10,6 +11,7 @@
  * ChangeSiteSettings: Change site settings
 */
 const PermissionFlags = {
+  CreateCertificates: 1n << 1n,
   ViewLogs: 1n << 6n,
   InviteUsers: 1n << 10n,
   ViewUsers: 1n << 11n,

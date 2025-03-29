@@ -216,6 +216,7 @@ module.exports = {
         \`domains\` MEDIUMTEXT NOT NULL COMMENT 'The domains on this certificate. Separated by a comma',
         \`dns_profile\` INT NOT NULL COMMENT 'The DNS profile associated with this certificate',
         \`disabled\` tinyint(1) DEFAULT '0' COMMENT 'Whether the certificate is disabled',
+        FOREIGN KEY (\`created_by\`) REFERENCES \`users\`(\`user_id\`),
         UNIQUE (\`id\`)
       )
     `);

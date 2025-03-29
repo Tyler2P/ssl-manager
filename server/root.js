@@ -1,5 +1,6 @@
 const { checkRequest, sendPage } = require("../utils/functions");
 const cache = require("../utils/cache");
+const { default: PermissionBitfield } = require("../utils/permissions");
 const router = require("express").Router();
 
 module.exports = function(dbPool) {
@@ -12,9 +13,12 @@ module.exports = function(dbPool) {
     if (!checkReq?.bool) return;
 
     let [dnsProfiles] = await dbPool.query("SELECT id, name FROM dns_profiles");
+    let [certs] = await dbPool.query("SELECT * FROM certificates");
 
     sendPage(req, res, "dashboard/overview.ejs", {
       dnsProfiles,
+      certs,
+      userPerms: new PermissionBitfield(BigInt(checkReq.user?.permissions || 0)),
       defaultDnsProfile: Array.isArray(dnsProfiles) ? dnsProfiles.find((x) => x.id === cache.config.defaultProfile) : null
     });
   });
