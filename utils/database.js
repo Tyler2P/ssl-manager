@@ -1,7 +1,5 @@
 const mysql = require("mysql2/promise");
-const chalk = require("chalk");
-const { defineDB } = require("./functions");
-const { formatLog } = require("./functions");
+const { defineDB, formatLog } = require("./functions");
 
 const maxDBConnections = process.env.MAX_DB_CONNECTIONS || 5;
 
